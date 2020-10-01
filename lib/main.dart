@@ -1,5 +1,5 @@
+import 'screens/wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/screens/screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -8,7 +8,7 @@ void main() async {
   runApp(MaterialApp(
     title: 'Music Player',
     routes: {
-      '/': (context) => Home(),
+      '/': (context) => Wrapper(),
     },
   ));
 }
