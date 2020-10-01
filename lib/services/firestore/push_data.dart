@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'references.dart';
 import 'package:music_player/error/upload_error.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/storage/upload.dart';
-
-final CollectionReference songItemDetails =
-    FirebaseFirestore.instance.collection('songItemDetails');
 
 Future<void> pushSong(SongDetail songDetail) async {
   Future.wait([

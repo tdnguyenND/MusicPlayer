@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
+
 class SongDetail {
   final String name;
   final String artist;
@@ -10,6 +12,8 @@ class SongDetail {
 
   String songUrl;
   String imageUrl;
+
+  Audio _audio;
 
   SongDetail(
       {this.name,
@@ -28,5 +32,18 @@ class SongDetail {
       'songUrl': songUrl,
       'imageUrl': imageUrl
     };
+  }
+
+  Audio get audio {
+    _audio = _audio != null
+        ? _audio
+        : Audio.network(songUrl,
+            metas: Metas(
+              image: MetasImage.network(imageUrl),
+              title: name,
+              artist: artist,
+              album: album,
+            ));
+    return this._audio;
   }
 }

@@ -32,8 +32,14 @@ dependencies:
   # Toast
   fluttertoast: ^7.1.1
 
+  # Music player
+  assets_audio_player: ^2.0.10
+
   # File manipulation
   file_picker: ^2.0.6
+  
+  # Spinkit
+  flutter_spinkit: ^4.1.2+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
