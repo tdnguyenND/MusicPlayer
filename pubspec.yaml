@@ -26,8 +26,14 @@ dependencies:
   
   # Firebase plugin
   firebase_core: ^0.5.0
+  firebase_auth: ^0.18.1
   firebase_storage: ^4.0.0
   cloud_firestore: ^0.14.0+2
+
+  # Facebook log in
+  flutter_facebook_login: ^3.0.0
+  # Google log in
+  google_sign_in: ^4.5.4
 
   # Toast
   fluttertoast: ^7.1.1

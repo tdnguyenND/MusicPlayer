@@ -15,6 +15,11 @@ class _WrapperState extends State<Wrapper> {
       'name': 'upload',
       'widget': UploadScreen(),
       'icon': Icon(Icons.cloud_upload)
+    },
+    {
+      'name': 'account',
+      'widget': Account(),
+      'icon': Icon(Icons.account_circle)
     }
   ];
 
