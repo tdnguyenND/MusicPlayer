@@ -1,6 +1,8 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/services/auth/auth.dart';
+import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
+    final AssetsAudioPlayer player = Provider.of<AssetsAudioPlayer>(context);
     return StreamBuilder<User>(
         stream: userStream,
         builder: (context, snapshot) {
@@ -37,7 +40,10 @@ class _AccountState extends State<Account> {
             return Center(
               child: RaisedButton(
                 child: Text('Log out'),
-                onPressed: logOut,
+                onPressed: () async {
+                  await player.stop();
+                  logOut();
+                },
               ),
             );
           }

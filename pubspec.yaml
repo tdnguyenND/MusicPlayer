@@ -34,6 +34,9 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   # Google log in
   google_sign_in: ^4.5.4
+  
+  # Provider
+  provider: ^4.3.2+2
 
   # Toast
   fluttertoast: ^7.1.1

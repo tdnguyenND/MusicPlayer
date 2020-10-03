@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 class SongDetail {
+  String id;
+
   final String name;
   final String artist;
   final String album;
@@ -16,7 +18,8 @@ class SongDetail {
   Audio _audio;
 
   SongDetail(
-      {this.name,
+      {this.id,
+      this.name,
       this.artist,
       this.album,
       this.song,
@@ -34,7 +37,7 @@ class SongDetail {
     };
   }
 
-  Audio get audio {
+  Audio toAudio() {
     _audio = _audio != null
         ? _audio
         : Audio.network(songUrl,
@@ -45,5 +48,24 @@ class SongDetail {
               album: album,
             ));
     return this._audio;
+  }
+
+  static fromMapWithoutId(Map map) {
+    return SongDetail(
+        name: map['name'],
+        artist: map['artist'],
+        album: map['album'],
+        songUrl: map['songUrl'],
+        imageUrl: map['imageUrl']);
+  }
+
+  static fromMap(Map map) {
+    return SongDetail(
+        id: map['id'],
+        name: map['name'],
+        artist: map['artist'],
+        album: map['album'],
+        songUrl: map['songUrl'],
+        imageUrl: map['imageUrl']);
   }
 }
