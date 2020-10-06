@@ -23,6 +23,6 @@ class PlaylistDetail {
     if (id != null) {
       songDetails = await getSongOfPlaylist(id);
     } else
-      songDetails = await getAllSong();
+      songDetails = await getAllSongOrderByName();
   }
 }

@@ -6,3 +6,7 @@ List<List<dynamic>> splitList(List list) {
   print('chunks = $chunks');
   return chunks;
 }
+
+bool matchWithoutCaseSensitive(String lookFor, String lookIn){
+  return RegExp(lookFor.toLowerCase()).hasMatch(lookIn.toLowerCase());
+}

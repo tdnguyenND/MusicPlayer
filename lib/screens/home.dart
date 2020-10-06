@@ -13,7 +13,7 @@ class _HomeState extends State<Home> {
   PlaylistDetail allSongs = PlaylistDetail();
 
   void loadSong() async {
-    allSongs.songDetails = await getAllSong();
+    allSongs.songDetails = await getAllSongOrderByName();
     setState(() {});
   }
 

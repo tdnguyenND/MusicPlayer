@@ -11,8 +11,9 @@ import 'package:provider/provider.dart';
 
 class SongWidget extends StatefulWidget {
   final SongDetail songDetail;
+  final bool playRight;
 
-  SongWidget({this.songDetail});
+  SongWidget({this.songDetail, this.playRight = true});
   @override
   _SongWidgetState createState() => _SongWidgetState();
 }
@@ -31,8 +32,10 @@ class _SongWidgetState extends State<SongWidget> {
   @override
   Widget build(BuildContext context) {
     user = Provider.of<User>(context);
-    playlist = Provider.of<List<Audio>>(context);
-    player = Provider.of<AssetsAudioPlayer>(context);
+    if (widget.playRight) {
+      playlist = Provider.of<List<Audio>>(context);
+      player = Provider.of<AssetsAudioPlayer>(context);
+    }
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: Card(
@@ -49,21 +52,23 @@ class _SongWidgetState extends State<SongWidget> {
             ),
             Row(
               children: [
-                RaisedButton(
-                  shape: CircleBorder(),
-                  child: Icon(Icons.play_arrow),
-                  onPressed: () {
-                    playlist.shuffle();
-                    playlist.insert(0, detail.toAudio());
-                    // remove duplicates
-                    playlist = playlist.toSet().toList();
-                    player.open(
-                      Playlist(audios: playlist, startIndex: 0),
-                      autoStart: true,
-                      showNotification: true,
-                    );
-                  },
-                ),
+                widget.playRight
+                    ? RaisedButton(
+                        shape: CircleBorder(),
+                        child: Icon(Icons.play_arrow),
+                        onPressed: () {
+                          playlist.shuffle();
+                          playlist.insert(0, detail.toAudio());
+                          // remove duplicates
+                          playlist = playlist.toSet().toList();
+                          player.open(
+                            Playlist(audios: playlist, startIndex: 0),
+                            autoStart: true,
+                            showNotification: true,
+                          );
+                        },
+                      )
+                    : Container(),
                 RaisedButton(
                   shape: CircleBorder(),
                   child: Icon(Icons.more_vert),
