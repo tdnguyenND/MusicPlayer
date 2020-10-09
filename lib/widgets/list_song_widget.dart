@@ -33,7 +33,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                 children: listSongDetails
                 .map((SongDetail songDetail) => SongWidget(
                       songDetail: songDetail,
-                      playRight: false,
+                      playRight: widget.playable,
                     ))
                 .toList(),
               ))
