@@ -36,6 +36,14 @@ Future<List<SongDetail>> searchSongByAlbum(String album) async {
   return await _searchSongByField('album', album);
 }
 
+Future<PlaylistDetail> getLovedSongAsPlaylist(String uid) async {
+  List<String> listSongId =
+      List<String>.from((await userData.doc(uid).get()).data()['loveSong']);
+  List<SongDetail> songDetails =
+      await _listSongDetailFromListSongId(listSongId);
+  return PlaylistDetail(name: 'Loved song', songDetails: songDetails);
+}
+
 Future<List<SongDetail>> _searchSongByField(String field, String value) async {
   List<SongDetail> songCatalog = await getAllSongOrderByName();
   final List<SongDetail> result = songCatalog

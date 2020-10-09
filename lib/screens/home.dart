@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:music_player/models/playlist_detail.dart';
+import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/firestore/fetch_data.dart';
-import 'package:music_player/widgets/playlist_widget.dart';
+import 'package:music_player/widgets/list_song_widget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -10,10 +10,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  PlaylistDetail allSongs = PlaylistDetail();
+  List<SongDetail> allSongs;
 
   void loadSong() async {
-    allSongs.songDetails = await getAllSongOrderByName();
+    allSongs = await getAllSongOrderByName();
     setState(() {});
   }
 
@@ -25,12 +25,14 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return allSongs.songDetails == null
+    return allSongs == null
         ? SpinKitCircle(
             color: Colors.black,
           )
-        : PlaylistWidget(
-            playlistDetail: allSongs,
-          );
+        : SingleChildScrollView(
+          child: ListSongWidget(
+              listSongDetails: allSongs,
+            ),
+        );
   }
 }

@@ -30,7 +30,8 @@ class _SearchState extends State<Search> {
           children: [
             Container(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Form(
                   child: Row(
                     children: [
@@ -63,7 +64,7 @@ class _SearchState extends State<Search> {
                 ? SpinKitCircle(
                     color: Colors.black,
                   )
-                : searchResult
+                : Expanded(child: searchResult)
           ],
         ),
       ),
@@ -88,26 +89,25 @@ class _SearchState extends State<Search> {
   }
 
   void showSearchResult() {
-    searchResult = Expanded(
-      child: ListView(
-        children: [
-          SearchBySingleFieldResultWidget(
-            searchResult: searchByNameResult,
-            field: 'name',
-            value: searchKey,
-          ),
-          SearchBySingleFieldResultWidget(
-            searchResult: searchByAlbumResult,
-            field: 'album',
-            value: searchKey,
-          ),
-          SearchBySingleFieldResultWidget(
-            searchResult: searchByArtistResult,
-            field: 'artist',
-            value: searchKey,
-          ),
-        ],
-      ),
+    searchResult = 
+    ListView(
+      children: [
+        SearchBySingleFieldResultWidget(
+          searchResult: searchByNameResult,
+          field: 'name',
+          value: searchKey,
+        ),
+        SearchBySingleFieldResultWidget(
+          searchResult: searchByAlbumResult,
+          field: 'album',
+          value: searchKey,
+        ),
+        SearchBySingleFieldResultWidget(
+          searchResult: searchByArtistResult,
+          field: 'artist',
+          value: searchKey,
+        ),
+      ],
     );
   }
 }

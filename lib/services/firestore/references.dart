@@ -8,3 +8,6 @@ final CollectionReference playlistCollection =
 
 final CollectionReference songToPlaylist =
     FirebaseFirestore.instance.collection('songToPlaylist');
+
+final CollectionReference userData =
+    FirebaseFirestore.instance.collection('userData');

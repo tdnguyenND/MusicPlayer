@@ -24,43 +24,8 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     user = Provider.of<User>(context);
     if (user != null) {
-      if (selectedPlaylist != null) {
-        return Stack(
-          children: [
-            SingleChildScrollView(
-                          child: Column(
-                children: [
-                  Container(
-                    height: 56,
-                  ),
-                  PlaylistWidget(
-                    playlistDetail: selectedPlaylist,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: AppBar(
-                title: Text(selectedPlaylist.name),
-                leading: new IconButton(
-                  icon: new Icon(Icons.arrow_back_ios, color: Colors.grey),
-                  onPressed: () {
-                    setState(() {
-                      selectedPlaylist = null;
-                    });
-                  },
-                ),
-                backgroundColor: Colors.blue.withOpacity(0.3),
-                elevation: 0.0,
-              ),
-            )
-          ],
-        );
-      } else {
-        return StreamBuilder(
+      return MaterialApp(
+        home: StreamBuilder(
           stream: userPlaylists(user.uid),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -93,9 +58,11 @@ class _LibraryState extends State<Library> {
                               ],
                             ),
                             onPressed: () {
-                              setState(() {
-                                selectedPlaylist = playlist;
-                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PlaylistWidget(
+                                          playlistDetail: playlist)));
                             },
                           ),
                         );
@@ -116,8 +83,8 @@ class _LibraryState extends State<Library> {
               );
             }
           },
-        );
-      }
+        ),
+      );
     } else {
       return Center(
         child: Column(

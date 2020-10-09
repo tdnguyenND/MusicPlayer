@@ -8,9 +8,9 @@ class PlaylistDetail {
   String name;
   List<SongDetail> songDetails;
 
-  PlaylistDetail({this.id, this.uid, this.name});
+  PlaylistDetail({this.id, this.uid, this.name, this.songDetails});
 
-  Future<List<Audio>> get playlist async {
+  List<Audio> get playlist {
     return songDetails.map((detail) => detail.toAudio()).toList();
   }
 

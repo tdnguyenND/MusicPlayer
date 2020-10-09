@@ -25,11 +25,6 @@ class _WrapperState extends State<Wrapper> {
       'icon': Icon(Icons.library_music)
     },
     {
-      'name': 'upload',
-      'widget': UploadScreen(),
-      'icon': Icon(Icons.cloud_upload)
-    },
-    {
       'name': 'account',
       'widget': Account(),
       'icon': Icon(Icons.account_circle)

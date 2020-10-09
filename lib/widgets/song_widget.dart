@@ -73,7 +73,7 @@ class _SongWidgetState extends State<SongWidget> {
                   shape: CircleBorder(),
                   child: Icon(Icons.more_vert),
                   onPressed: () {
-                    selectOption(context);
+                    _selectOption(context);
                   },
                 ),
               ],
@@ -84,7 +84,7 @@ class _SongWidgetState extends State<SongWidget> {
     );
   }
 
-  void selectOption(BuildContext context) {
+  void _selectOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -97,6 +97,15 @@ class _SongWidgetState extends State<SongWidget> {
                   onPressed: () {
                     if (user != null) {
                       selectPlaylistToAdd(context);
+                    } else
+                      Fluttertoast.showToast(msg: 'Please log in first');
+                  },
+                ),
+                FlatButton(
+                  child: Text('Like this song'),
+                  onPressed: () {
+                    if (user != null) {
+                      addOrRemoveLoveSong(user.uid, detail.id);
                     } else
                       Fluttertoast.showToast(msg: 'Please log in first');
                   },

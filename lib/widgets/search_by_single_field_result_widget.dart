@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/widgets/song_widget.dart';
+import 'list_song_widget.dart';
 
 class SearchBySingleFieldResultWidget extends StatefulWidget {
   final List<SongDetail> searchResult;
@@ -22,20 +22,20 @@ class _SearchBySingleFieldResultWidgetState
     extends State<SearchBySingleFieldResultWidget> {
   List<SongDetail> searchResult;
   static final limit = 3;
+  Text title;
+
   @override
   void initState() {
     searchResult = widget.searchResult;
+    title = Text('Search result for ${widget.field}');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Text title = Text('Search result for ${widget.field}');
     Widget content = _contentAsWidget();
-    return Container(
-      child: Column(
-        children: [title, content],
-      ),
+    return Column(
+      children: [title, content],
     );
   }
 
@@ -49,12 +49,12 @@ class _SearchBySingleFieldResultWidgetState
   }
 
   Widget _haveResultView() {
-    return (widget.searchResult.length >= limit
+    return widget.searchResult.length >= limit
         ? Column(
-            children: searchResult
-                    .sublist(0, limit)
-                    .map(_singleResultToWidget)
-                    .toList() +
+            children: <Widget>[
+                  ListSongWidget(
+                      listSongDetails: searchResult.sublist(0, limit))
+                ] +
                 [
                   FlatButton(
                     child: Text('View all'),
@@ -67,34 +67,19 @@ class _SearchBySingleFieldResultWidgetState
                   )
                 ],
           )
-        : Column(
-            children: searchResult.map(_singleResultToWidget).toList(),
-          ));
-  }
-
-  Widget _singleResultToWidget(SongDetail singleResult) {
-    return SongWidget(
-      songDetail: singleResult,
-      playRight: false,
-    );
+        : ListSongWidget(
+            listSongDetails: searchResult,
+          );
   }
 
   Widget _fullScreen() {
-    return Stack(
-      children: [
-        ListView(
-          children: searchResult.map(_singleResultToWidget).toList(),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 0,
-          child: AppBar(
-            title: Text('something'),
-            elevation: 0.0,
-          ),
-        )
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: title,
+      ),
+      body: SingleChildScrollView(
+        child: ListSongWidget(listSongDetails: searchResult,),
+      )
     );
   }
 }
