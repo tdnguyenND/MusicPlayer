@@ -33,47 +33,79 @@ class _SongWidgetState extends State<SongWidget> {
     user = Provider.of<User>(context);
     playlist = Provider.of<List<Audio>>(context);
     player = Provider.of<AssetsAudioPlayer>(context);
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
+
+    return Container(
+      margin: EdgeInsets.all(5),
+      height: 80,
       child: Card(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(detail.name),
-                Text(detail.artist),
-                Text(detail.album)
-              ],
-            ),
-            Row(
-              children: [
-                RaisedButton(
-                  shape: CircleBorder(),
-                  child: Icon(Icons.play_arrow),
-                  onPressed: () {
-                    playlist.shuffle();
-                    playlist.insert(0, detail.toAudio());
-                    // remove duplicates
-                    playlist = playlist.toSet().toList();
-                    player.open(
-                      Playlist(audios: playlist, startIndex: 0),
-                      autoStart: true,
-                      showNotification: true,
-                    );
-                  },
+        color: Colors.black54,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: InkWell(
+          onTap:(){
+            playlist.shuffle();
+            playlist.insert(0, detail.toAudio());
+          // remove duplicates
+            playlist = playlist.toSet().toList();
+            player.open(
+              Playlist(audios: playlist, startIndex: 0),
+                       autoStart: true,
+                       showNotification: true);
+            },
+          child: Row(
+            children: [
+              Container(
+                  width: 80,
+                  height: 80,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(15.0)),
+                    child: Image.network(detail.imageUrl,fit: BoxFit.cover,),
+                  )
+              ),
+
+              SizedBox(width: 15,),
+              Container(
+                width: 220,
+                height: 80,
+                child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10,),
+                    Container(
+                      width: 220,
+                      child: Text(detail.name,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),),
+                    ),
+                    SizedBox(height: 5,),
+                    Text(detail.artist,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: TextStyle(
+                          color: Colors.black87
+                      ),)
+                  ],
                 ),
-                RaisedButton(
-                  shape: CircleBorder(),
-                  child: Icon(Icons.more_vert),
-                  onPressed: () {
-                    selectOption(context);
-                  },
-                ),
-              ],
-            )
-          ],
+              ),
+              Container(
+               width: 30,
+               child: IconButton(
+                 iconSize: 28,
+                   icon: Icon(Icons.more_vert, color: Colors.white,),
+                   onPressed: () {
+                     selectOption(context);
+                   }
+               ),
+             )
+            ],
+          ),
         ),
       ),
     );
@@ -84,18 +116,50 @@ class _SongWidgetState extends State<SongWidget> {
         context: context,
         builder: (context) {
           return Container(
+            width: 180,
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+            color: Colors.black,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                FlatButton(
-                  child: Text('Add to playlist'),
-                  onPressed: () {
+                Center(
+                  child: Column(
+                    children: [
+                      Container(
+                          child: Image.network(detail.imageUrl),
+                        width: 120,
+                        height: 120,
+                      ),
+                      SizedBox(height: 10,),
+                      Text(detail.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                      ),),
+                      Text(detail.artist,style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16
+                      ),
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    IconButton(icon: Icon( Icons.favorite, color: Colors.green,) , onPressed: () {
                     if (user != null) {
-                      selectPlaylistToAdd(context);
+                    selectPlaylistToAdd(context);
                     } else
-                      Fluttertoast.showToast(msg: 'Please log in first');
-                  },
-                )
+                    Fluttertoast.showToast(msg: 'Please log in first');
+                    },),
+                    Text('Thich',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16
+                    ),)
+                  ],
+                ),
+
               ],
             ),
           );
