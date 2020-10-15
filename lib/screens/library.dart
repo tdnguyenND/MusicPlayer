@@ -24,43 +24,8 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     user = Provider.of<User>(context);
     if (user != null) {
-      if (selectedPlaylist != null) {
-        return Stack(
-          children: [
-            SingleChildScrollView(
-                          child: Column(
-                children: [
-                  Container(
-                    height: 56,
-                  ),
-                  PlaylistWidget(
-                    playlistDetail: selectedPlaylist,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: AppBar(
-                title: Text(selectedPlaylist.name),
-                leading: new IconButton(
-                  icon: new Icon(Icons.arrow_back_ios, color: Colors.grey),
-                  onPressed: () {
-                    setState(() {
-                      selectedPlaylist = null;
-                    });
-                  },
-                ),
-                backgroundColor: Colors.blue.withOpacity(0.3),
-                elevation: 0.0,
-              ),
-            )
-          ],
-        );
-      } else {
-        return StreamBuilder(
+      return MaterialApp(
+        home: StreamBuilder(
           stream: userPlaylists(user.uid),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -69,55 +34,135 @@ class _LibraryState extends State<Library> {
             }
             if (snapshot.hasData) {
               List<PlaylistDetail> listOfPlaylist = snapshot.data;
-              return Center(
-                child: Column(
-                  children: <Widget>[] +
-                      listOfPlaylist.map((PlaylistDetail playlist) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 5),
-                          child: FlatButton(
-                            color: Colors.grey[200],
+              return Scaffold(
+                backgroundColor: Colors.grey[900],
+                body: Container(
+                  decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              Color(0xff191414),
+                              Color(0xFF1db954),
+                            ],
+                            begin: Alignment.bottomLeft,
+                            end : Alignment.topLeft,
+                            stops: [0.015,0.7]
+                        )
+                    ),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(15, 30, 10, 0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('Nhạc',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold
+                              )
+                              ,),
+                            CircleAvatar(
+                              backgroundImage: NetworkImage('https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg'),
+                              radius: 18,
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 20 ),
+                        Row(
+                          children: [
+                            Text('Playlist',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20
+                              ),),
+                          ],
+                        ),
+                        SizedBox(height: 20 ),
+                        Card(
+                          color: Colors.grey[900],
+                          borderOnForeground: false,
+                          child: InkWell(
+                            onTap: () {
+                              _createPlaylistWithName();
+                            },
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(playlist.name),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                  ),
-                                  onPressed: () {
-                                    _confirmDeletePlaylist(context, playlist);
-                                  },
-                                )
+                                Container(
+                                  child: Image.asset('assets/add_playlist.png',height: 70,width: 70,
+                                    fit: BoxFit.fitWidth,),
+                                ),
+                                SizedBox(width: 15,),
+                                Text('Tạo playlist',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  letterSpacing: 0.6
+                                ),)
                               ],
                             ),
-                            onPressed: () {
-                              setState(() {
-                                selectedPlaylist = playlist;
-                              });
-                            },
                           ),
-                        );
-                      }).toList() +
-                      [
-                        RaisedButton(
-                          child: Text('Create playlist'),
-                          onPressed: () {
-                            _createPlaylistWithName();
-                          },
-                        )
-                      ],
-                ),
-              );
+                        ),
+                              ]
+                              +
+                          listOfPlaylist.map((PlaylistDetail playlist) {
+                            return  Card(
+                              color: Colors.grey[900],
+                              borderOnForeground: false,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => PlaylistWidget(
+                                                        playlistDetail: playlist)));
+                                          },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      child: Image.asset('assets/img1.jpg',height: 70,width: 70,
+                                        fit: BoxFit.cover,),
+                                    ),
+                                    SizedBox(width: 25,),
+                                    Container(
+                                      width: 230,
+                                      child: Text(playlist.name,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            letterSpacing: 0.6
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                     ),
+                                    IconButton(
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            _confirmDeletePlaylist(context, playlist);
+                                          },
+                                        )
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList()),
+                  )
+                  ),
+                );
             } else {
               return SpinKitCircle(
                 color: Colors.black,
               );
             }
           },
-        );
-      }
+        ),
+      );
     } else {
       return Center(
         child: Column(
@@ -136,7 +181,7 @@ class _LibraryState extends State<Library> {
     showDialog<String>(
       context: context,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
+        contentPadding: const EdgeInsets.all(10.0),
         content: Form(
           key: _formKey,
           child: Row(
@@ -152,6 +197,9 @@ class _LibraryState extends State<Library> {
                   onChanged: (value) {
                     _newPlaylistName = value;
                   },
+                  style: TextStyle(
+                    fontSize: 17
+                  ),
                 ),
               )
             ],
@@ -204,3 +252,53 @@ class _LibraryState extends State<Library> {
     );
   }
 }
+// Container(
+//   child:ListView.builder(
+//     itemCount: listOfPlaylist.length,
+//     shrinkWrap: true,
+//     itemBuilder: (BuildContext context,int index){
+//       return Card(
+//         color: Colors.grey[900],
+//         borderOnForeground: false,
+//         child: InkWell(
+//           onTap: () {
+//             Navigator.push(
+//                 context,
+//                 MaterialPageRoute(
+//                     builder: (context) => PlaylistWidget(
+//                         playlistDetail: listOfPlaylist[index])));
+//           },
+//           child: Row(
+//             children: [
+//               Container(
+//                 child: Image.asset('assets/img1.jpg',height: 70,width: 70,
+//                   fit: BoxFit.cover,),
+//               ),
+//               SizedBox(width: 25,),
+//               Container(
+//                 width: 230,
+//                 child: Text(listOfPlaylist[index].name,
+//                   style: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.white,
+//                       fontSize: 20,
+//                       letterSpacing: 0.6
+//                   ),
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//               IconButton(
+//                 icon: Icon(
+//                   Icons.delete,
+//                   color: Colors.white,
+//                 ),
+//                 onPressed: () {
+//                   _confirmDeletePlaylist(context, listOfPlaylist[index]);
+//                 },
+//               )
+//             ],
+//           ),
+//         ),
+//       );
+//     }
+//       ))

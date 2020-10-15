@@ -31,6 +31,6 @@ class _PlaylistCardState extends State<PlaylistCard> {
           )
         ],
       ),
-    );;
+    );
   }
 }

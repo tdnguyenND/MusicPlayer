@@ -13,6 +13,7 @@ Future<User> signInWithFacebook() async {
     final FacebookLogin facebookLogIn = FacebookLogin();
 
     final result = await facebookLogIn.logIn(['email']);
+    print(result);
     final token = result.accessToken.token;
     if (result.status == FacebookLoginStatus.loggedIn) {
       final AuthCredential credential = FacebookAuthProvider.credential(token);
@@ -35,7 +36,6 @@ Future<User> signInWithGoogle() async {
     final GoogleSignInAccount account = await googleSignIn.signIn();
     final GoogleSignInAuthentication authentication =
         await account.authentication;
-
     final AuthCredential authCredential = GoogleAuthProvider.credential(
         accessToken: authentication.accessToken,
         idToken: authentication.idToken);

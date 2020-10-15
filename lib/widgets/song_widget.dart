@@ -11,8 +11,9 @@ import 'package:provider/provider.dart';
 
 class SongWidget extends StatefulWidget {
   final SongDetail songDetail;
+  final bool playRight;
 
-  SongWidget({this.songDetail});
+  SongWidget({this.songDetail, this.playRight = true});
   @override
   _SongWidgetState createState() => _SongWidgetState();
 }
@@ -38,7 +39,7 @@ class _SongWidgetState extends State<SongWidget> {
       margin: EdgeInsets.all(5),
       height: 80,
       child: Card(
-        color: Colors.black54,
+        color: Colors.grey[700],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -66,7 +67,7 @@ class _SongWidgetState extends State<SongWidget> {
 
               SizedBox(width: 15,),
               Container(
-                width: 220,
+                width: 250,
                 height: 80,
                 child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +90,7 @@ class _SongWidgetState extends State<SongWidget> {
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
-                          color: Colors.black87
+                          color: Colors.white70
                       ),)
                   ],
                 ),
@@ -100,7 +101,7 @@ class _SongWidgetState extends State<SongWidget> {
                  iconSize: 28,
                    icon: Icon(Icons.more_vert, color: Colors.white,),
                    onPressed: () {
-                     selectOption(context);
+                     _selectOption(context);
                    }
                ),
              )
@@ -111,7 +112,7 @@ class _SongWidgetState extends State<SongWidget> {
     );
   }
 
-  void selectOption(BuildContext context) {
+  void _selectOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -159,7 +160,6 @@ class _SongWidgetState extends State<SongWidget> {
                     ),)
                   ],
                 ),
-
               ],
             ),
           );

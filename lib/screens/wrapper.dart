@@ -15,14 +15,14 @@ class _WrapperState extends State<Wrapper> {
   List<Map> screens = [
     {'name': 'home', 'widget': Home(), 'icon': Icon(Icons.home)},
     {
+      'name': 'search',
+      'widget': Search(),
+      'icon': Icon(Icons.search)
+    },
+    {
       'name': 'library',
       'widget': Library(),
       'icon': Icon(Icons.library_music)
-    },
-    {
-      'name': 'upload',
-      'widget': UploadScreen(),
-      'icon': Icon(Icons.cloud_upload)
     },
     {
       'name': 'account',

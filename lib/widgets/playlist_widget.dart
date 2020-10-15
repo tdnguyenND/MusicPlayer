@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/playlist_detail.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/widgets/song_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:music_player/widgets/list_song_widget.dart';
 
 class PlaylistWidget extends StatefulWidget {
   final PlaylistDetail playlistDetail;
 
-  PlaylistWidget({this.playlistDetail});
+  PlaylistWidget({@required this.playlistDetail});
 
   @override
   _PlaylistWidgetState createState() => _PlaylistWidgetState();
@@ -19,14 +18,17 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
   List<SongDetail> listSongDetails;
 
   void loadSong() async {
-    playlistDetail = widget.playlistDetail;
     await playlistDetail.fetchSongs();
-    listSongDetails = playlistDetail.songDetails;
-    setState(() {});
+    setState(() {
+      playlistDetail = widget.playlistDetail;
+      listSongDetails = playlistDetail.songDetails;
+    });
   }
 
   @override
   void initState() {
+    playlistDetail = widget.playlistDetail;
+    listSongDetails = playlistDetail.songDetails;
     loadSong();
     super.initState();
   }
@@ -34,22 +36,16 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
   @override
   Widget build(BuildContext context) {
     if (listSongDetails != null) {
-      return listSongDetails.isNotEmpty
-          ? StreamProvider.value(
-              value: Stream.fromFuture(playlistDetail.playlist),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: listSongDetails
-                      .map((SongDetail songDetail) => SongWidget(
-                            songDetail: songDetail,
-                          ))
-                      .toList(),
-                ),
-              ),
-            )
-          : Center(
-              child: Text('This playlist is empty'),
-            );
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(playlistDetail.name ?? 'Playlist name'),
+        ),
+        body: SingleChildScrollView(
+          child: ListSongWidget(
+          listSongDetails: listSongDetails,
+        ),
+        ),
+      );
     } else
       return SpinKitCircle(
         color: Colors.black,
