@@ -32,11 +32,9 @@ class _AccountState extends State<Account> {
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/1.jpg'),
-                      fit: BoxFit.cover
-                    )
-                  ),
+                      image: DecorationImage(
+                          image: AssetImage('assets/1.jpg'),
+                          fit: BoxFit.cover)),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -44,14 +42,16 @@ class _AccountState extends State<Account> {
                         Container(
                           height: 50,
                           child: SignInButton(
-                              Buttons.FacebookNew,
-                              onPressed: signInWithFacebook,
-                              shape: RoundedRectangleBorder(
+                            Buttons.FacebookNew,
+                            onPressed: signInWithFacebook,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-                            ),),
-
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           height: 50,
                           child: SignInButton(
@@ -63,14 +63,16 @@ class _AccountState extends State<Account> {
                             ),
                           ),
                         ),
-
-                        SizedBox(height: 20,),
-                        Text( 'Hip Hop never die',
-                          style: TextStyle(
-                            color: Colors.white
-                          ),
+                        SizedBox(
+                          height: 20,
                         ),
-                        SizedBox(height: 10,)
+                        Text(
+                          'Hip Hop never die',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
                       ],
                     ),
                   ),
@@ -81,16 +83,14 @@ class _AccountState extends State<Account> {
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xff191414),
-                        Color(0xFF1db954),
-                      ],
-                      begin: Alignment.bottomLeft,
-                       end : Alignment.topLeft,
-                      stops: [0.015,0.7]
-                    )
-                  ),
+                      gradient: LinearGradient(
+                          colors: [
+                            Color(0xff191414),
+                            Color(0xFF1db954),
+                          ],
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topLeft,
+                          stops: [0.015, 0.7])),
                   child: Column(
                     children: [
                       Center(
@@ -98,27 +98,36 @@ class _AccountState extends State<Account> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 40,),
-                             CircleAvatar(
-                               backgroundImage: AssetImage('assets/img1.jpg'),
-                               radius: 45,
-                             ),
-                            SizedBox(height: 20,),
-                            Text('Son Tung',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 23
-                            ),),
-                            SizedBox(height: 10,),
-                            Text('sontung@gmail.com',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18
-                              ),),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            CircleAvatar(
+                              backgroundImage: AssetImage('assets/img1.jpg'),
+                              radius: 45,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'Son Tung',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 23),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'sontung@gmail.com',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             SizedBox(
                               width: 400,
-                              child: Divider(color: Colors.white,
+                              child: Divider(
+                                color: Colors.white,
                               ),
                             )
                           ],
@@ -126,81 +135,81 @@ class _AccountState extends State<Account> {
                       ),
                       Container(
                         width: 300,
-                        child: ListView(
-                          shrinkWrap: true,
-                            children: [
-                         Container(
-                           height: 70,
-                           margin: EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-                           child: RaisedButton(
-                             color: Color(0xffd4f8dd).withOpacity(0.45),
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(15),
-                             ),
-                              child: Text('Up load song',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: 'Console'
-                              ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UploadScreen()
-                                    )
-                                );
-                              },
-                            ),
-                         ),
+                        child: ListView(shrinkWrap: true, children: [
                           Container(
                             height: 70,
-                            margin: EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 10),
                             child: RaisedButton(
                               color: Color(0xffd4f8dd).withOpacity(0.45),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Text('Song you liked',
+                              child: Text(
+                                'Up load song',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontFamily: 'Console'
-                                ),
+                                    fontFamily: 'Console'),
                               ),
-
-                              onPressed: () async {
-                                PlaylistDetail pd = await getLovedSongAsPlaylist(user.uid);
+                              onPressed: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            PlaylistWidget(playlistDetail: pd)));
+                                        builder: (context) => UploadScreen()));
                               },
                             ),
                           ),
-                         Container(
-                           height: 70,
-                           margin: EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-                           child: RaisedButton(
-                             colorBrightness: Brightness.light ,
+                          Container(
+                            height: 70,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 10),
+                            child: RaisedButton(
                               color: Color(0xffd4f8dd).withOpacity(0.45),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                                  child: Text('Log out',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: 'Console'
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    await player.stop();
-                                    logOut();
-                                  },
-                                ),
-                         ),
+                              child: Text(
+                                'Song you liked',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: 'Console'),
+                              ),
+                              onPressed: () async {
+                                PlaylistDetail pd =
+                                    await getLovedSongAsPlaylist(user.uid);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PlaylistWidget(
+                                            playlistDetail: pd)));
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 70,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 10),
+                            child: RaisedButton(
+                              colorBrightness: Brightness.light,
+                              color: Color(0xffd4f8dd).withOpacity(0.45),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Text(
+                                'Log out',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: 'Console'),
+                              ),
+                              onPressed: () async {
+                                await player.stop();
+                                logOut();
+                              },
+                            ),
+                          ),
                         ]),
                       )
                     ],

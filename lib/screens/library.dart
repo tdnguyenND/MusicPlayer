@@ -37,124 +37,138 @@ class _LibraryState extends State<Library> {
               return Scaffold(
                 backgroundColor: Colors.grey[900],
                 body: Container(
-                  decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
                               Color(0xff191414),
                               Color(0xFF1db954),
                             ],
                             begin: Alignment.bottomLeft,
-                            end : Alignment.topLeft,
-                            stops: [0.015,0.7]
-                        )
-                    ),
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(15, 30, 10, 0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Nhạc',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold
-                              )
-                              ,),
-                            CircleAvatar(
-                              backgroundImage: NetworkImage('https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg'),
-                              radius: 18,
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 20 ),
-                        Row(
-                          children: [
-                            Text('Playlist',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20
-                              ),),
-                          ],
-                        ),
-                        SizedBox(height: 20 ),
-                        Card(
-                          color: Colors.grey[900],
-                          borderOnForeground: false,
-                          child: InkWell(
-                            onTap: () {
-                              _createPlaylistWithName();
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  child: Image.asset('assets/add_playlist.png',height: 70,width: 70,
-                                    fit: BoxFit.fitWidth,),
-                                ),
-                                SizedBox(width: 15,),
-                                Text('Tạo playlist',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  letterSpacing: 0.6
-                                ),)
-                              ],
-                            ),
-                          ),
-                        ),
-                              ]
-                              +
-                          listOfPlaylist.map((PlaylistDetail playlist) {
-                            return  Card(
-                              color: Colors.grey[900],
-                              borderOnForeground: false,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => PlaylistWidget(
-                                                        playlistDetail: playlist)));
-                                          },
-                                child: Row(
+                            end: Alignment.topLeft,
+                            stops: [0.015, 0.7])),
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(15, 30, 10, 0),
+                      child: Column(
+                          children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      child: Image.asset('assets/img1.jpg',height: 70,width: 70,
-                                        fit: BoxFit.cover,),
+                                    Text(
+                                      'Nhạc',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(width: 25,),
-                                    Container(
-                                      width: 230,
-                                      child: Text(playlist.name,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            letterSpacing: 0.6
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          'https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg'),
+                                      radius: 18,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Playlist',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Card(
+                                  color: Colors.grey[900],
+                                  borderOnForeground: false,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _createPlaylistWithName();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Image.asset(
+                                            'assets/add_playlist.png',
+                                            height: 70,
+                                            width: 70,
+                                            fit: BoxFit.fitWidth,
+                                          ),
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                     ),
-                                    IconButton(
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          'Tạo playlist',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              letterSpacing: 0.6),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ] +
+                              listOfPlaylist.map((PlaylistDetail playlist) {
+                                return Card(
+                                  color: Colors.grey[900],
+                                  borderOnForeground: false,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PlaylistWidget(
+                                                      playlistDetail:
+                                                          playlist)));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Image.asset(
+                                            'assets/img1.jpg',
+                                            height: 70,
+                                            width: 70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 25,
+                                        ),
+                                        Container(
+                                          width: 230,
+                                          child: Text(
+                                            playlist.name,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                letterSpacing: 0.6),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        IconButton(
                                           icon: Icon(
                                             Icons.delete,
                                             color: Colors.white,
                                           ),
                                           onPressed: () {
-                                            _confirmDeletePlaylist(context, playlist);
+                                            _confirmDeletePlaylist(
+                                                context, playlist);
                                           },
                                         )
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList()),
-                  )
-                  ),
-                );
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList()),
+                    )),
+              );
             } else {
               return SpinKitCircle(
                 color: Colors.black,
@@ -197,9 +211,7 @@ class _LibraryState extends State<Library> {
                   onChanged: (value) {
                     _newPlaylistName = value;
                   },
-                  style: TextStyle(
-                    fontSize: 17
-                  ),
+                  style: TextStyle(fontSize: 17),
                 ),
               )
             ],

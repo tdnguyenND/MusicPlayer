@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class PlaylistCard extends StatefulWidget {
   @override
   _PlaylistCardState createState() => _PlaylistCardState();
@@ -17,13 +15,14 @@ class _PlaylistCardState extends State<PlaylistCard> {
           SizedBox(
             height: 130.0,
             width: 130.0,
-            child: Image.asset('assets/img1.jpg',
+            child: Image.asset(
+              'assets/img1.jpg',
               fit: BoxFit.cover,
             ),
-
           ),
           Padding(padding: EdgeInsets.all(5.0)),
-          Text('Bai hat',
+          Text(
+            'Bai hat',
             style: TextStyle(
               color: Colors.white,
               fontSize: 10.0,

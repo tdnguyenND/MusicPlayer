@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:music_player/models/playlist_detail.dart';
 import 'package:music_player/models/song_detail.dart';
+import 'package:music_player/shared/const.dart';
 import 'package:music_player/shared/support_function.dart';
 import 'references.dart';
 
@@ -42,6 +43,25 @@ Future<PlaylistDetail> getLovedSongAsPlaylist(String uid) async {
   List<SongDetail> songDetails =
       await _listSongDetailFromListSongId(listSongId);
   return PlaylistDetail(name: 'Loved song', songDetails: songDetails);
+}
+
+Future<List<SongDetail>> getTopListenedSong() async {
+  return _listSongDetailFromQuerySnapshot(await songItemDetails
+      .orderBy('listenTime', descending: true)
+      .limit(chartLimit)
+      .orderBy('name')
+      .get());
+}
+
+Future<List<SongDetail>> getLatestUpload() async {
+  return _listSongDetailFromQuerySnapshot(await songItemDetails
+      .orderBy('created', descending: true)
+      .limit(chartLimit)
+      .get());
+}
+
+List<SongDetail> _listSongDetailFromQuerySnapshot(QuerySnapshot snapshot) {
+  return snapshot.docs.map(_songDetailFromQueryDocumentSnapshot).toList();
 }
 
 Future<List<SongDetail>> _searchSongByField(String field, String value) async {

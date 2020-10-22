@@ -10,11 +10,33 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<SongDetail> allSongs;
+  List<SongDetail> latestUpload;
+  List<SongDetail> topHit;
+
+  Widget homeBase;
 
   void loadSong() async {
-    allSongs = await getAllSongOrderByName();
-    setState(() {});
+    Future.wait([
+      getLatestUpload().then((value) {
+        latestUpload = value;
+      }),
+      getTopListenedSong().then((value) {
+        topHit = value;
+      })
+    ]).then((value) {
+      setState(() {
+        homeBase = SingleChildScrollView(
+          child: Column(
+            children: [
+              Text('Upload recently'),
+              ListSongWidget(listSongDetails: latestUpload),
+              Text('Top listen'),
+              ListSongWidget(listSongDetails: topHit)
+            ],
+          ),
+        );
+      });
+    });
   }
 
   @override
@@ -25,14 +47,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return allSongs == null
+    return homeBase == null
         ? SpinKitCircle(
             color: Colors.black,
           )
         : SingleChildScrollView(
-          child: ListSongWidget(
-              listSongDetails: allSongs,
-            ),
-        );
+            child: homeBase,
+          );
   }
 }

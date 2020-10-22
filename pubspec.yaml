@@ -50,6 +50,9 @@ dependencies:
 
   # File manipulation
   file_picker: ^2.0.6
+
+  # Extract metadata from mp3
+  media_metadata_plugin: ^0.0.5
   
   # Spinkit
   flutter_spinkit: ^4.1.2+1

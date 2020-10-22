@@ -29,26 +29,13 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               create: (context) => listSongDetails
                   .map((SongDetail songDetail) => songDetail.toAudio())
                   .toList(),
-              child: Container(
-               // decoration: BoxDecoration(
-               //      gradient: LinearGradient(
-               //          colors: [
-               //            Color(0xff191414),
-               //            Color(0xFF1db954),
-               //          ],
-               //          begin: Alignment.bottomLeft,
-               //          end : Alignment.topLeft,
-               //          stops: [0.015,0.7]
-               //      )
-               //  ),
-                child: Column(
-                  children: listSongDetails
-                  .map((SongDetail songDetail) => SongWidget(
-                        songDetail: songDetail,
-                        playRight: widget.playable,
-                      ))
-                  .toList(),
-                ),
+              child: Column(
+                children: listSongDetails
+                    .map((SongDetail songDetail) => SongWidget(
+                          songDetail: songDetail,
+                          playRight: widget.playable,
+                        ))
+                    .toList(),
               ))
           : Center(
               child: Text('This playlist is empty'),

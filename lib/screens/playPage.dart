@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -58,7 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(width: 320, child: Image.asset('images/img1.jpg')),
             SizedBox(height: 30),
             Text('Radioactive'.toUpperCase(),
-                style: textStyle.merge(TextStyle(fontSize: 24,fontWeight: FontWeight.bold,letterSpacing: 1))),
+                style: textStyle.merge(TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1))),
             SizedBox(height: 5),
             Text('Imagine Dragons',
                 style: textStyle

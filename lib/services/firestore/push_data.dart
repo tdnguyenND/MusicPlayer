@@ -70,6 +70,12 @@ Future<bool> isLoveSongExist(String uid, String songId) async {
   return lovedSongIds.contains(songId);
 }
 
+Future<void> increaseListenTime(String songId) async {
+  return await songItemDetails
+      .doc(songId)
+      .update({'listenTime': FieldValue.increment(1)});
+}
+
 Future<List<dynamic>> _extractArrayFieldFromDocumentReference(
     DocumentReference documentReference, String field) async {
   return (await documentReference.get()).data()[field] ?? [];

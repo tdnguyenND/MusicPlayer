@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:media_metadata_plugin/media_media_data.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/firestore/push_data.dart';
 import 'package:path/path.dart';
+import 'package:media_metadata_plugin/media_metadata_plugin.dart';
 
 class UploadScreen extends StatefulWidget {
   @override
@@ -21,6 +23,8 @@ class _UploadScreenState extends State<UploadScreen> {
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController _songNameController = TextEditingController();
+  TextEditingController _artistNameController = TextEditingController();
+  TextEditingController _albumNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +51,24 @@ class _UploadScreenState extends State<UploadScreen> {
               ),
               TextFormField(
                 controller: _songNameController,
-                validator: (val) => val == null ? "Song name is required" : null,
+                validator: (val) =>
+                    val == null ? "Song name is required" : null,
                 decoration: InputDecoration(hintText: 'Enter name'),
                 onChanged: (value) {
                   _name = value;
                 },
               ),
               TextFormField(
-                validator: (val) => val == null ? "Album name is required" : null,
+                controller: _albumNameController,
+                validator: (val) =>
+                    val == null ? "Album name is required" : null,
                 decoration: InputDecoration(hintText: 'Enter album name'),
                 onChanged: (value) {
                   _album = value;
                 },
               ),
               TextFormField(
+                controller: _artistNameController,
                 validator: (val) =>
                     val == null ? "Artist name is required" : null,
                 decoration: InputDecoration(hintText: 'Enter artist name'),
@@ -107,11 +115,11 @@ class _UploadScreenState extends State<UploadScreen> {
   void selectSong() async {
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
-
-    if (result != null) {
-      _song = File(result.files.single.path);
-      _songNameController.text =
-          _name = basenameWithoutExtension(result.files.single.path);
-    }
+    String path = result.files.single.path;
+    _song = File(path);
+    AudioMetaData metaData = await MediaMetadataPlugin.getMediaMetaData(path);
+    _songNameController.text = _name = basenameWithoutExtension(path);
+    _albumNameController.text = metaData.album;
+    _artistNameController.text = metaData.artistName;
   }
 }

@@ -43,6 +43,7 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
         body: SingleChildScrollView(
           child: ListSongWidget(
           listSongDetails: listSongDetails,
+          playable: true,
         ),
         ),
       );
