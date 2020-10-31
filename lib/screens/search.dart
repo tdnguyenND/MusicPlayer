@@ -1,8 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/firestore/fetch_data.dart';
 import 'package:music_player/widgets/search_by_single_field_result_widget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:http/http.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -97,6 +103,15 @@ class _SearchState extends State<Search> {
                       letterSpacing: 0.5,
                     )),
               ),
+              Card(
+                child: FlatButton(
+                  child: Text('shazam'),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Recorder()));
+                  },
+                ),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -131,47 +146,6 @@ class _SearchState extends State<Search> {
             ],
           ),
         ),
-        // child: Column(
-        //   children: [
-        //     Container(
-        //       child: Padding(
-        //         padding:
-        //             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //         child: Form(
-        //           child: Row(
-        //             children: [
-        //               Flexible(
-        //                 flex: 9,
-        //                 child: TextFormField(
-        //                   decoration: InputDecoration(
-        //                       hintText: 'Search for music, artist, and album'),
-        //                   onChanged: (value) {
-        //                     searchKey = value;
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //               Flexible(
-        //                 flex: 1,
-        //                 child: IconButton(
-        //                   icon: Icon(Icons.search),
-        //                   onPressed: () {
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     loading
-        //         ? SpinKitCircle(
-        //             color: Colors.black,
-        //           )
-        //         : Expanded(child: searchResult)
-        //   ],
-        // ),
       ),
     );
   }
@@ -213,5 +187,70 @@ class _SearchState extends State<Search> {
         ),
       ],
     );
+  }
+}
+
+class Recorder extends StatefulWidget {
+  @override
+  _RecorderState createState() => _RecorderState();
+}
+
+class _RecorderState extends State<Recorder> {
+  String path;
+  String data;
+  String fileName = '/record.mp3';
+  FlutterSoundRecorder recorder;
+
+  String apiPath = 'https://shazam.p.rapidapi.com/songs/detect';
+  String apiToken = 'cf0b683c0dmshfe84d1e62f43840p185a45jsn372db35a018e';
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    recorder = FlutterSoundRecorder();
+    recorder.openAudioSession();
+    data = '';
+    path = (await getApplicationDocumentsDirectory()).path;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: FlatButton(
+          child: Icon(Icons.mic),
+          onPressed: () async {
+            if (!recorder.isRecording) {
+              recorder.startRecorder(
+                  codec: Codec.pcm16,
+                  toFile: path + fileName,
+                  numChannels: 1,
+                  sampleRate: 44100);
+            } else {
+              recorder.stopRecorder();
+              detectThenDelete();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  void detectThenDelete() async {
+    File file = File(path + fileName);
+    List<int> audioBytes = file.readAsBytesSync();
+    String base64 = Base64Encoder().convert(audioBytes);
+    Response response = await post(apiPath,
+        headers: {
+          'x-rapidapi-host': "shazam.p.rapidapi.com",
+          'x-rapidapi-key': apiToken,
+          'content-type': "text/plain",
+        },
+        body: base64);
+    print(response.body);
   }
 }
