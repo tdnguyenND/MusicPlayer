@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/firestore/fetch_data.dart';
+import 'package:music_player/services/shazam.dart';
 import 'package:music_player/widgets/search_by_single_field_result_widget.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:http/http.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -196,61 +194,67 @@ class Recorder extends StatefulWidget {
 }
 
 class _RecorderState extends State<Recorder> {
-  String path;
-  String data;
-  String fileName = '/record.mp3';
-  FlutterSoundRecorder recorder;
-
-  String apiPath = 'https://shazam.p.rapidapi.com/songs/detect';
-  String apiToken = 'cf0b683c0dmshfe84d1e62f43840p185a45jsn372db35a018e';
+  ShazamService shazamService;
+  String result;
+  Widget detectingResult = Container();
 
   @override
   void initState() {
+    shazamService = ShazamService();
+    Permission.microphone.request();
     super.initState();
-    init();
   }
 
-  void init() async {
-    recorder = FlutterSoundRecorder();
-    recorder.openAudioSession();
-    data = '';
-    path = (await getApplicationDocumentsDirectory()).path;
+  Future<ShazamService> future() async {
+    return shazamService;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FlatButton(
-          child: Icon(Icons.mic),
-          onPressed: () async {
-            if (!recorder.isRecording) {
-              recorder.startRecorder(
-                  codec: Codec.pcm16,
-                  toFile: path + fileName,
-                  numChannels: 1,
-                  sampleRate: 44100);
-            } else {
-              recorder.stopRecorder();
-              detectThenDelete();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  void detectThenDelete() async {
-    File file = File(path + fileName);
-    List<int> audioBytes = file.readAsBytesSync();
-    String base64 = Base64Encoder().convert(audioBytes);
-    Response response = await post(apiPath,
-        headers: {
-          'x-rapidapi-host': "shazam.p.rapidapi.com",
-          'x-rapidapi-key': apiToken,
-          'content-type': "text/plain",
-        },
-        body: base64);
-    print(response.body);
+        body: Center(
+            child: StreamBuilder<ShazamServiceStatus>(
+                stream: shazamService.onStatusChanged,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError || !snapshot.hasData)
+                    return Text('Something went wrong');
+                  ShazamServiceStatus status = snapshot.data;
+                  if (status == ShazamServiceStatus.INITIALIZING) {
+                    return SpinKitCircle(
+                      color: Colors.black,
+                    );
+                  } else if (status == ShazamServiceStatus.DETECTING ||
+                      status == ShazamServiceStatus.SONG_FOUND) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                            onPressed: shazamService.stopDetecting,
+                            child: Text('Cancel')),
+                        Text('Detecting'),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        detectingResult,
+                        IconButton(
+                            icon: Icon(Icons.mic),
+                            onPressed: () async {
+                              setState(() {
+                                detectingResult = Container();
+                                shazamService.startDetecting().then((value) {
+                                  result = value;
+                                  detectingResult = result == null
+                                      ? Text('Not found! Please try again')
+                                      : Text(result);
+                                });
+                              });
+                            }),
+                      ],
+                    );
+                  }
+                })));
   }
 }
