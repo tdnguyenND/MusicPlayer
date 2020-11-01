@@ -131,47 +131,6 @@ class _SearchState extends State<Search> {
             ],
           ),
         ),
-        // child: Column(
-        //   children: [
-        //     Container(
-        //       child: Padding(
-        //         padding:
-        //             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //         child: Form(
-        //           child: Row(
-        //             children: [
-        //               Flexible(
-        //                 flex: 9,
-        //                 child: TextFormField(
-        //                   decoration: InputDecoration(
-        //                       hintText: 'Search for music, artist, and album'),
-        //                   onChanged: (value) {
-        //                     searchKey = value;
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //               Flexible(
-        //                 flex: 1,
-        //                 child: IconButton(
-        //                   icon: Icon(Icons.search),
-        //                   onPressed: () {
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     loading
-        //         ? SpinKitCircle(
-        //             color: Colors.black,
-        //           )
-        //         : Expanded(child: searchResult)
-        //   ],
-        // ),
       ),
     );
   }

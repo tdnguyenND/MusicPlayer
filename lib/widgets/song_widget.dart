@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:music_player/models/playlist_detail.dart';
@@ -37,86 +38,81 @@ class _SongWidgetState extends State<SongWidget> {
 
     return Container(
       margin: EdgeInsets.all(5),
-      height: 80,
+      width: 380,
+      height: 70,
       child: Card(
         color: Colors.grey[700],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        child: InkWell(
-          onTap: () {
-            playlist.shuffle();
-            playlist.insert(0, detail.toAudio());
-            // remove duplicates
-            playlist = playlist.toSet().toList();
-            player.open(Playlist(audios: playlist, startIndex: 0),
-                autoStart: true, showNotification: true);
-          },
-          child: Row(
-            children: [
-              Container(
-                  width: 80,
-                  height: 80,
-                  child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.horizontal(left: Radius.circular(15.0)),
-                    child: Image.network(
-                      detail.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-              SizedBox(
-                width: 15,
-              ),
-              Container(
-                width: 250,
-                height: 80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 220,
-                      child: Text(
-                        detail.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      detail.artist,
+        child: Row(
+          children: [
+            Container(
+                width: 70,
+                height: 70,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.horizontal(left: Radius.circular(15.0)),
+                  child: Image.network(detail.imageUrl,fit: BoxFit.cover,),
+                )
+            ),
+            SizedBox(width: 10,),
+            Container(
+              width: 220,
+              height: 70,
+              child:  Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5,),
+                  Container(
+                    child: Text(detail.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       softWrap: false,
-                      style: TextStyle(color: Colors.white70),
-                    )
-                  ],
-                ),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),),
+                  ),
+                  SizedBox(height: 3,),
+                  Text(detail.artist,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                        color: Colors.white70
+                    ),)
+                ],
               ),
-              Container(
-                width: 30,
-                child: IconButton(
-                    iconSize: 28,
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      _selectOption(context);
-                    }),
-              )
-            ],
-          ),
+            ),
+            Container(
+              width: 25,
+              child: IconButton(
+                  icon: Icon(Icons.play_arrow,color: Colors.white,),
+                  iconSize: 30,
+                  onPressed: (){
+                    playlist.shuffle();
+                    playlist.insert(0, detail.toAudio());
+                    // remove duplicates
+                    playlist = playlist.toSet().toList();
+                    player.open(
+                        Playlist(audios: playlist, startIndex: 0),
+                        autoStart: true,
+                        showNotification: true);
+                  }),
+            ),
+            SizedBox(width: 5,),
+            Container(
+              width: 25,
+              child: IconButton(
+                  iconSize: 30,
+                  icon: Icon(Icons.more_vert, color: Colors.white,),
+                  onPressed: () {
+                    _selectOption(context);
+                  }
+              ),
+            )
+          ],
+
         ),
       ),
     );
@@ -157,6 +153,7 @@ class _SongWidgetState extends State<SongWidget> {
                 ),
                 FlatButton(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Icon(
                         Icons.favorite,

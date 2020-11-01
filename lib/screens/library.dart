@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/playlist_detail.dart';
@@ -34,6 +35,7 @@ class _LibraryState extends State<Library> {
             }
             if (snapshot.hasData) {
               List<PlaylistDetail> listOfPlaylist = snapshot.data;
+              String urlAvatar = user.photoURL??'https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg';
               return Scaffold(
                 backgroundColor: Colors.grey[900],
                 body: Container(
@@ -48,11 +50,10 @@ class _LibraryState extends State<Library> {
                             stops: [0.015, 0.7])),
                     child: Container(
                       margin: EdgeInsets.fromLTRB(15, 30, 10, 0),
-                      child: Column(
+                      child: ListView(
                           children: <Widget>[
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
@@ -60,13 +61,15 @@ class _LibraryState extends State<Library> {
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 40,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold
+                                      ),
                                     ),
+                                    SizedBox(width: 150,),
                                     CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          'https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg'),
-                                      radius: 18,
-                                    )
+                                      backgroundImage: NetworkImage(urlAvatar),
+                                      radius:25,
+                                    ),
+                                    Padding(padding: EdgeInsets.all(1)),
                                   ],
                                 ),
                                 SizedBox(height: 20),
@@ -143,7 +146,7 @@ class _LibraryState extends State<Library> {
                                         Container(
                                           width: 230,
                                           child: Text(
-                                            playlist.name,
+                                            playlist.name ?? 'playlist name',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -178,6 +181,7 @@ class _LibraryState extends State<Library> {
         ),
       );
     } else {
+      // screen demand log in
       return Center(
         child: Column(
           children: [
@@ -200,7 +204,8 @@ class _LibraryState extends State<Library> {
           key: _formKey,
           child: Row(
             children: <Widget>[
-              Expanded(
+              SizedBox(
+                width: 450,
                 child: TextFormField(
                   autofocus: true,
                   validator: (value) => value == null
