@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:music_player/models/rapid_api_key.dart';
+import 'package:music_player/services/firestore/rapid_api.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,14 +13,15 @@ enum ShazamServiceStatus {
   READY,
   DETECTING,
   DETECTING_TIMEOUT,
-  SONG_FOUND
+  SONG_FOUND,
+  UNAVAILABLE,
 }
 
 class ShazamService {
   String path;
 
   String apiPath = 'https://shazam.p.rapidapi.com/songs/detect';
-  String apiToken = '45d82d4d46mshb4b85c3cdb18340p1062edjsn012c79b3b39e';
+  RapidApiKey apiToken;
   Duration timeout = Duration(seconds: 9);
   Duration detectingDelay = Duration(seconds: 2, microseconds: 500);
 
@@ -53,7 +54,16 @@ class ShazamService {
   void _init() async {
     path = (await getApplicationDocumentsDirectory()).path;
     filePath = path + fileName;
-    setStatus(ShazamServiceStatus.READY);
+    await obtainToken();
+  }
+
+  Future<void> obtainToken() async {
+    try {
+      apiToken = await getRapidApiKey();
+      setStatus(ShazamServiceStatus.READY);
+    } catch (Error) {
+      setStatus(ShazamServiceStatus.UNAVAILABLE);
+    }
   }
 
   Future<String> startDetecting() async {
@@ -91,10 +101,7 @@ class ShazamService {
   }
 
   void setDetectInterval() {
-    int counter = 1;
     Timer.periodic(detectingDelay, (t) async {
-      print('try $counter time(s)');
-      counter++;
       if (status != ShazamServiceStatus.DETECTING) {
         t.cancel();
         recorder.stopRecorder();
@@ -113,15 +120,20 @@ class ShazamService {
   }
 
   Future<String> detect(Uint8List data) async {
+    if (apiToken.counter == 0) {
+      await obtainToken();
+    }
+    if (status == ShazamServiceStatus.UNAVAILABLE) return null;
     String base64 = Base64Encoder().convert(data);
     Response response = await post(apiPath,
         headers: {
           'x-rapidapi-host': "shazam.p.rapidapi.com",
-          'x-rapidapi-key': apiToken,
+          'x-rapidapi-key': apiToken.value,
           'content-type': "text/plain",
         },
         body: base64);
-    print(response.body);
+    decreaseApiKeyCounter(apiToken.id);
+    apiToken.counter--;
     var objectResponse = json.decode(response.body);
     if (objectResponse['track'] != null) {
       return objectResponse['track']['title'].toString();

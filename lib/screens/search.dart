@@ -105,8 +105,10 @@ class _SearchState extends State<Search> {
                 child: FlatButton(
                   child: Text('shazam'),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Recorder()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SongDetector()));
                   },
                 ),
               ),
@@ -188,12 +190,12 @@ class _SearchState extends State<Search> {
   }
 }
 
-class Recorder extends StatefulWidget {
+class SongDetector extends StatefulWidget {
   @override
-  _RecorderState createState() => _RecorderState();
+  _SongDetectorState createState() => _SongDetectorState();
 }
 
-class _RecorderState extends State<Recorder> {
+class _SongDetectorState extends State<SongDetector> {
   ShazamService shazamService;
   String result;
   Widget detectingResult = Container();
@@ -212,6 +214,7 @@ class _RecorderState extends State<Recorder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(title: Text('Detect Song')),
         body: Center(
             child: StreamBuilder<ShazamServiceStatus>(
                 stream: shazamService.onStatusChanged,
@@ -223,6 +226,9 @@ class _RecorderState extends State<Recorder> {
                     return SpinKitCircle(
                       color: Colors.black,
                     );
+                  } else if (status == ShazamServiceStatus.UNAVAILABLE) {
+                    return Center(
+                        child: Text('This feature is not available for now'));
                   } else if (status == ShazamServiceStatus.DETECTING ||
                       status == ShazamServiceStatus.SONG_FOUND) {
                     return Column(
