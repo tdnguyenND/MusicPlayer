@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'package:music_player/services/firestore/fetch_data.dart';
+import 'package:music_player/services/shazam.dart';
 import 'package:music_player/widgets/search_by_single_field_result_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -97,6 +101,15 @@ class _SearchState extends State<Search> {
                       letterSpacing: 0.5,
                     )),
               ),
+              Card(
+                child: FlatButton(
+                  child: Text('shazam'),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Recorder()));
+                  },
+                ),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -131,47 +144,6 @@ class _SearchState extends State<Search> {
             ],
           ),
         ),
-        // child: Column(
-        //   children: [
-        //     Container(
-        //       child: Padding(
-        //         padding:
-        //             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //         child: Form(
-        //           child: Row(
-        //             children: [
-        //               Flexible(
-        //                 flex: 9,
-        //                 child: TextFormField(
-        //                   decoration: InputDecoration(
-        //                       hintText: 'Search for music, artist, and album'),
-        //                   onChanged: (value) {
-        //                     searchKey = value;
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //               Flexible(
-        //                 flex: 1,
-        //                 child: IconButton(
-        //                   icon: Icon(Icons.search),
-        //                   onPressed: () {
-        //                     setState(searchAndShowResult);
-        //                   },
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     loading
-        //         ? SpinKitCircle(
-        //             color: Colors.black,
-        //           )
-        //         : Expanded(child: searchResult)
-        //   ],
-        // ),
       ),
     );
   }
@@ -213,5 +185,76 @@ class _SearchState extends State<Search> {
         ),
       ],
     );
+  }
+}
+
+class Recorder extends StatefulWidget {
+  @override
+  _RecorderState createState() => _RecorderState();
+}
+
+class _RecorderState extends State<Recorder> {
+  ShazamService shazamService;
+  String result;
+  Widget detectingResult = Container();
+
+  @override
+  void initState() {
+    shazamService = ShazamService();
+    Permission.microphone.request();
+    super.initState();
+  }
+
+  Future<ShazamService> future() async {
+    return shazamService;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: StreamBuilder<ShazamServiceStatus>(
+                stream: shazamService.onStatusChanged,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError || !snapshot.hasData)
+                    return Text('Something went wrong');
+                  ShazamServiceStatus status = snapshot.data;
+                  if (status == ShazamServiceStatus.INITIALIZING) {
+                    return SpinKitCircle(
+                      color: Colors.black,
+                    );
+                  } else if (status == ShazamServiceStatus.DETECTING ||
+                      status == ShazamServiceStatus.SONG_FOUND) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                            onPressed: shazamService.stopDetecting,
+                            child: Text('Cancel')),
+                        Text('Detecting'),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        detectingResult,
+                        IconButton(
+                            icon: Icon(Icons.mic),
+                            onPressed: () async {
+                              setState(() {
+                                detectingResult = Container();
+                                shazamService.startDetecting().then((value) {
+                                  result = value;
+                                  detectingResult = result == null
+                                      ? Text('Not found! Please try again')
+                                      : Text(result);
+                                });
+                              });
+                            }),
+                      ],
+                    );
+                  }
+                })));
   }
 }
