@@ -15,7 +15,6 @@ Future<RapidApiKey> getRapidApiKey() async {
 }
 
 Future<void> decreaseApiKeyCounter(String id) {
-  print(id);
   return rapidApiRef.doc(id).update({'counter': FieldValue.increment(-1)});
 }
 

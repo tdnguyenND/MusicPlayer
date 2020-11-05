@@ -29,7 +29,6 @@ class _LibraryState extends State<Library> {
           stream: userPlaylists(user.uid),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Text('Something went wrong!');
             }
             if (snapshot.hasData) {

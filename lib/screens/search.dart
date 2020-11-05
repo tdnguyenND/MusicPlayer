@@ -18,13 +18,12 @@ class _SearchState extends State<Search> {
   String searchKey;
 
   Widget searchResult;
-  Widget searchByNameResultWidget;
-  Widget searchByArtirstResultWidget;
-  Widget searchByAlbumResultWidget;
 
   List<SongDetail> searchByNameResult;
   List<SongDetail> searchByAlbumResult;
   List<SongDetail> searchByArtistResult;
+
+  TextEditingController _controller = TextEditingController();
   List<String> img = [
     'assets/genre.png',
     'assets/genre.png',
@@ -92,8 +91,9 @@ class _SearchState extends State<Search> {
                     ),
                     onChanged: (value) {
                       searchKey = value;
-                      setState(searchAndShowResult);
+                      searchAndShowResult();
                     },
+                    controller: _controller,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -105,10 +105,13 @@ class _SearchState extends State<Search> {
                 child: FlatButton(
                   child: Text('shazam'),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SongDetector()));
+                    Navigator.push<Map>(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SongDetector()))
+                        .then((value) {
+                      updateWithSearchKey(value['title']);
+                    });
                   },
                 ),
               ),
@@ -127,21 +130,26 @@ class _SearchState extends State<Search> {
                 ],
               ),
               Expanded(
-                child: searchResult ??
-                    GridView.count(
-                      crossAxisCount: 2,
-                      childAspectRatio: (170 / 100),
-                      children: List.generate(img.length, (index) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          clipBehavior: Clip.antiAlias,
-                          child: Container(
-                            child: Image.asset(img[index], fit: BoxFit.cover),
-                          ),
-                        );
-                      }),
-                    ),
+                child: loading
+                    ? SpinKitCircle(
+                        color: Colors.black,
+                      )
+                    : searchResult ??
+                        GridView.count(
+                          crossAxisCount: 2,
+                          childAspectRatio: (170 / 100),
+                          children: List.generate(img.length, (index) {
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                child:
+                                    Image.asset(img[index], fit: BoxFit.cover),
+                              ),
+                            );
+                          }),
+                        ),
               )
             ],
           ),
@@ -150,41 +158,49 @@ class _SearchState extends State<Search> {
     );
   }
 
+  void updateWithSearchKey(String _searchKey) {
+    _controller.text = _searchKey;
+    searchKey = _searchKey;
+    searchAndShowResult();
+  }
+
   void searchAndShowResult() async {
     if (searchKey == null || searchKey.length == 0) return;
     setState(() {
       loading = true;
     });
-    Future.wait([
-      searchSongByName(searchKey).then((value) => searchByNameResult = value),
-      searchSongByAlbum(searchKey).then((value) => searchByAlbumResult = value),
-      searchSongByArtist(searchKey)
-          .then((value) => searchByArtistResult = value),
-    ]).then((value) => showSearchResult()).then((value) {
-      setState(() {
-        loading = false;
-      });
+    searchByNameResult = await searchSongByName(searchKey);
+    searchByAlbumResult = await searchSongByAlbum(searchKey);
+    searchByArtistResult = await searchSongByArtist(searchKey);
+
+    showSearchResult();
+    setState(() {
+      loading = false;
     });
   }
 
   void showSearchResult() {
+    searchResult = null;
+    SearchBySingleFieldResultWidget name = SearchBySingleFieldResultWidget(
+      searchResult: searchByNameResult,
+      field: 'name',
+      value: searchKey,
+    );
+    SearchBySingleFieldResultWidget album = SearchBySingleFieldResultWidget(
+      searchResult: searchByAlbumResult,
+      field: 'album',
+      value: searchKey,
+    );
+    SearchBySingleFieldResultWidget artist = SearchBySingleFieldResultWidget(
+      searchResult: searchByArtistResult,
+      field: 'artist',
+      value: searchKey,
+    );
     searchResult = ListView(
       children: [
-        SearchBySingleFieldResultWidget(
-          searchResult: searchByNameResult,
-          field: 'name',
-          value: searchKey,
-        ),
-        SearchBySingleFieldResultWidget(
-          searchResult: searchByAlbumResult,
-          field: 'album',
-          value: searchKey,
-        ),
-        SearchBySingleFieldResultWidget(
-          searchResult: searchByArtistResult,
-          field: 'artist',
-          value: searchKey,
-        ),
+        name,
+        album,
+        artist,
       ],
     );
   }
@@ -197,7 +213,7 @@ class SongDetector extends StatefulWidget {
 
 class _SongDetectorState extends State<SongDetector> {
   ShazamService shazamService;
-  String result;
+  Map result;
   Widget detectingResult = Container();
 
   @override
@@ -254,7 +270,19 @@ class _SongDetectorState extends State<SongDetector> {
                                   result = value;
                                   detectingResult = result == null
                                       ? Text('Not found! Please try again')
-                                      : Text(result);
+                                      : Column(
+                                          children: [
+                                            Text(result['title']),
+                                            Text(result['subtitle']),
+                                            RaisedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, result);
+                                              },
+                                              child:
+                                                  Text('Search for this title'),
+                                            )
+                                          ],
+                                        );
                                 });
                               });
                             }),

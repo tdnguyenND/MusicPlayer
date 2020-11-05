@@ -25,7 +25,7 @@ class ShazamService {
   Duration timeout = Duration(seconds: 9);
   Duration detectingDelay = Duration(seconds: 2, microseconds: 500);
 
-  String result;
+  Map result;
 
   String fileName = '/record.raw';
 
@@ -66,7 +66,7 @@ class ShazamService {
     }
   }
 
-  Future<String> startDetecting() async {
+  Future<Map> startDetecting() async {
     result = null;
     File(filePath).delete();
     await recorder.startRecorder(
@@ -107,7 +107,6 @@ class ShazamService {
         recorder.stopRecorder();
       } else {
         File file = File(filePath);
-        print(await file.length());
         result = await detect(file.readAsBytesSync());
         if (status == ShazamServiceStatus.DETECTING && result != null) {
           file.delete();
@@ -119,7 +118,7 @@ class ShazamService {
     });
   }
 
-  Future<String> detect(Uint8List data) async {
+  Future<Map> detect(Uint8List data) async {
     if (apiToken.counter == 0) {
       await obtainToken();
     }
@@ -136,7 +135,10 @@ class ShazamService {
     apiToken.counter--;
     var objectResponse = json.decode(response.body);
     if (objectResponse['track'] != null) {
-      return objectResponse['track']['title'].toString();
+      return {
+        'title': objectResponse['track']['title'].toString(),
+        'subtitle': objectResponse['track']['subtitle'].toString(),
+      };
     } else {
       return null;
     }

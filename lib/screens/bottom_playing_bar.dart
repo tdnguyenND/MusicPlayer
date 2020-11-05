@@ -17,7 +17,6 @@ class _BottomPlayingBarState extends State<BottomPlayingBar> {
       return playing.audio.audio;
     }), builder: (context, snapshot) {
       if (snapshot.hasError) {
-        print(snapshot.error);
         return Text(snapshot.error.toString());
       }
       if (snapshot.hasData) {

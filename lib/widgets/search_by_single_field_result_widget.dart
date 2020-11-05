@@ -2,54 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:music_player/models/song_detail.dart';
 import 'list_song_widget.dart';
 
-class SearchBySingleFieldResultWidget extends StatefulWidget {
+class SearchBySingleFieldResultWidget extends StatelessWidget {
   final List<SongDetail> searchResult;
   final String field;
   final String value;
+  static final limit = 3;
 
   SearchBySingleFieldResultWidget({
     @required this.searchResult,
     @required this.field,
     @required this.value,
   });
-
-  @override
-  _SearchBySingleFieldResultWidgetState createState() =>
-      _SearchBySingleFieldResultWidgetState();
-}
-
-class _SearchBySingleFieldResultWidgetState
-    extends State<SearchBySingleFieldResultWidget> {
-  List<SongDetail> searchResult;
-  static final limit = 3;
-  Text title;
-
-  @override
-  void initState() {
-    searchResult = widget.searchResult;
-    title = Text('Search result for ${widget.field}');
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget content = _contentAsWidget();
+    Widget content = _contentAsWidget(context);
     return Column(
-      children: [title, content],
+      children: [Text('Search result for $field'), content],
     );
   }
 
-  Widget _contentAsWidget() {
-    return searchResult.isEmpty ? _noResultView() : _haveResultView();
+  Widget _contentAsWidget(context) {
+    return searchResult.isEmpty
+        ? _noResultView(context)
+        : _haveResultView(context);
   }
 
-  Widget _noResultView() {
-    return Text(
-        'There are no songs that ${widget.field} match with \"${widget.value}\"');
+  Widget _noResultView(context) {
+    return Text('There are no songs that $field match with \"$value\"');
   }
 
-  Widget _haveResultView() {
-    return widget.searchResult.length >= limit
+  Widget _haveResultView(context) {
+    return searchResult.length >= limit
         ? Column(
             children: <Widget>[
                   ListSongWidget(
@@ -62,7 +45,7 @@ class _SearchBySingleFieldResultWidgetState
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => _fullScreen()));
+                              builder: (context) => _fullScreen(context)));
                     },
                   )
                 ],
@@ -72,14 +55,15 @@ class _SearchBySingleFieldResultWidgetState
           );
   }
 
-  Widget _fullScreen() {
+  Widget _fullScreen(context) {
     return Scaffold(
-      appBar: AppBar(
-        title: title,
-      ),
-      body: SingleChildScrollView(
-        child: ListSongWidget(listSongDetails: searchResult,),
-      )
-    );
+        appBar: AppBar(
+          title: Text('Search result for $field'),
+        ),
+        body: SingleChildScrollView(
+          child: ListSongWidget(
+            listSongDetails: searchResult,
+          ),
+        ));
   }
 }

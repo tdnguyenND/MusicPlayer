@@ -70,7 +70,7 @@ Future<List<SongDetail>> _searchSongByField(String field, String value) async {
       .where((SongDetail songDetail) =>
           matchWithoutCaseSensitive(value, songDetail.toMap()[field]))
       .toList();
-  return result;
+  return result ?? [];
 }
 
 SongDetail _songDetailFromQueryDocumentSnapshot(

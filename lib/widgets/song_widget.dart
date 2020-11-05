@@ -207,7 +207,6 @@ class _SongWidgetState extends State<SongWidget> {
                                     songId: detail.id);
                                 Navigator.pop(context);
                               } catch (e) {
-                                print(e);
                                 Fluttertoast.showToast(
                                     msg:
                                         'This song is already in this playlist');
