@@ -62,8 +62,7 @@ class _LibraryState extends State<Library> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          'https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg'),
+                                      backgroundImage: NetworkImage(user.photoURL),
                                       radius: 18,
                                     )
                                   ],
