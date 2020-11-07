@@ -21,6 +21,8 @@ class _UploadScreenState extends State<UploadScreen> {
   String _artist;
   String _album;
 
+  String selectedImage;
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController _songNameController = TextEditingController();
   TextEditingController _artistNameController = TextEditingController();
@@ -39,10 +41,18 @@ class _UploadScreenState extends State<UploadScreen> {
           key: _formKey,
           child: Column(
             children: [
-              FlatButton(
-                color: Colors.grey,
-                child: Text('Select Image'),
-                onPressed: selectImage,
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black)
+                ),
+                child: InkWell(
+                  onTap: selectImage,
+                  child: Center(
+                    child: _image == null ? Text('Select Image') : Image.file(_image),
+                  ),
+                ),
               ),
               FlatButton(
                 color: Colors.grey,
@@ -110,6 +120,9 @@ class _UploadScreenState extends State<UploadScreen> {
     if (result != null) {
       _image = File(result.files.single.path);
     }
+
+    setState(() {
+    });
   }
 
   void selectSong() async {
