@@ -17,13 +17,28 @@ class _BottomPlayingBarState extends State<BottomPlayingBar> {
       return playing.audio.audio;
     }), builder: (context, snapshot) {
       if (snapshot.hasError) {
-        return Text(snapshot.error.toString());
+        return Container(
+            height: 56,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              border: Border.symmetric(
+                  horizontal: BorderSide(color: Colors.black, width: 1)),
+            ),
+            child: Text(snapshot.error.toString()));
       }
       if (snapshot.hasData) {
         Metas metas = snapshot.data.metas;
-        return PlayingSongCard(metas: metas);
+        return Container(
+            height: 56,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              border: Border.symmetric(
+                  horizontal: BorderSide(color: Colors.black, width: 1)),
+            ),child: PlayingSongCard(metas: metas));
       }
-      return Center(child: Text('Your playing song here'));
+      return Container();
     });
   }
 }

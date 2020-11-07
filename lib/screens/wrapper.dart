@@ -34,15 +34,10 @@ class _WrapperState extends State<Wrapper> {
             Expanded(
               child: SafeArea(child: screens[status]['widget']),
             ),
-            Container(
-                height: 56,
-                width: MediaQuery.of(context).size.width,
-                child: BottomPlayingBar(),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  border: Border.symmetric(
-                      horizontal: BorderSide(color: Colors.black, width: 1)),
-                ))
+            BottomPlayingBar(
+              
+            ),
+            Container()
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
