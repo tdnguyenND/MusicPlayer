@@ -29,16 +29,53 @@ class PlayPage extends StatefulWidget {
 ///     (shortcut snapshot.metas.extra['detail'].name)
 
 class _PlayPageState extends State<PlayPage> {
+  String timeFormatter(double time) {
+    Duration duration = Duration(seconds: time.round());
+    if (duration.inHours > 0)
+      return [duration.inHours, duration.inMinutes, duration.inSeconds]
+          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+          .join(':');
+    else
+      return [duration.inMinutes, duration.inSeconds]
+          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+          .join(':');
+  }
+
+  GlobalKey _keyContain = GlobalKey();
+
+  double getContainWidth() {
+    RenderBox box = _keyContain.currentContext.findRenderObject();
+    double width = box.size.width;
+    return width;
+  }
+
+  double getWidth(double current, double total) {
+    double width = getContainWidth();
+    return (current / total) * width;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    super.initState();
+  }
+
+  _afterLayout(_) {
+    getContainWidth();
+  }
+
   @override
   Widget build(BuildContext context) {
     AssetsAudioPlayer player = Provider.of<AssetsAudioPlayer>(context);
-    return Scaffold(
-        // appBar: AppBar(),
-        body: StreamBuilder<Audio>(
+    bool seeking = false;
+    Duration currentPosition;
+
+    return MaterialApp(
+        home: StreamBuilder<Audio>(
       stream: player.current.map((playing) {
         if (playing == null) return null;
 
-        // return Audio directly instead of instance of Playing
+        //return Audio directly instead of instance of Playing
         return playing.audio.audio;
       }),
       builder: (context, snapshot) {
@@ -47,152 +84,204 @@ class _PlayPageState extends State<PlayPage> {
           Audio data = snapshot.data;
           String path = data.metas.image.path ??
               'https://upload.wikimedia.org/wikipedia/vi/e/e4/Taylor_Swift_Red.jpg';
-          return new Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color(0xff191414),
-                Color(0xFF1db954),
-                Color(0xff191414),
-              ],
-              begin: Alignment.bottomLeft,
-              end: Alignment.topLeft,
-            )),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.white54,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    Text(
-                      data.metas.artist,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontFamily: 'PT Sans'),
-                    ),
-                    Icon(Icons.more_vert, color: Colors.white54, size: 24),
-                  ],
-                ),
-                SizedBox(height: 40),
-                SizedBox(
-                  width: 320,
-                  child: Image.network(path),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  data.metas.title.toUpperCase(),
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                      color: Colors.white),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  data.metas.artist,
-                  style: TextStyle(fontSize: 18, color: Colors.white54),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 144,
-                      height: 1.5,
-                      color: Colors.white54,
-                    ),
-                    Flexible(
-                      child: Container(
-                        height: 1.0,
-                        color: Colors.white54,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '1:27',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color.fromRGBO(250, 250, 250, 0.46)),
-                    ),
-                    Text(
-                      '1:27',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color.fromRGBO(250, 250, 250, 0.46)),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
+          return Scaffold(
+            body: new Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xff191414),
+                  Color(0xFF1db954),
+                  Color(0xff191414),
+                ],
+                begin: Alignment.bottomLeft,
+                end: Alignment.topLeft,
+              )),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      IconButton(
                         icon: Icon(
-                          Icons.favorite_border,
+                          Icons.keyboard_arrow_down,
                           color: Colors.white54,
+                          size: 24,
                         ),
-                        onPressed: null),
-                    IconButton(
-                        icon: Icon(
-                          Icons.skip_previous,
-                          color: Color.fromRGBO(250, 250, 250, 0.95),
-                          size: 50,
-                        ),
-                        onPressed: null),
-                    IconButton(
-                        icon: Icon(
-                          player.isPlaying.value
-                              ? Icons.pause_circle_filled
-                              : Icons.play_circle_filled,
-                          size: 70,
-                          color: Color.fromRGBO(250, 250, 250, 0.95),
-                        ),
-                        onPressed: () async {
-                          await player.playOrPause();
-                          setState(() {});
-                        }),
-                    SizedBox(
-                      width: 3,
-                    ),
-                    IconButton(
-                        icon: Icon(
-                          Icons.skip_next,
-                          color: Color.fromRGBO(250, 250, 250, 0.95),
-                          size: 50,
-                        ),
-                        onPressed: null),
-                    IconButton(
-                        icon: Icon(
-                          Icons.remove_circle_outline_outlined,
-                          color: Colors.white54,
-                        ),
-                        onPressed: null),
-                  ],
-                )
-              ],
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Text(
+                        data.metas.artist,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontFamily: 'PT Sans'),
+                      ),
+                      Icon(Icons.more_vert, color: Colors.white54, size: 24),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                  SizedBox(
+                    width: 320,
+                    child: Image.network(path),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    data.metas.title.toUpperCase(),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    data.metas.artist,
+                    style: TextStyle(fontSize: 18, color: Colors.white54),
+                  ),
+                  SizedBox(height: 10),
+                  StreamBuilder<Duration>(
+                    stream: player.currentPosition,
+                    builder: (context, snapshot) {
+                      if (!seeking) currentPosition = snapshot.data;
+                      print(currentPosition.inSeconds);
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 1,
+                                ),
+                                child: Slider(
+                                  value: currentPosition.inSeconds.toDouble(),
+                                  min: 0.0,
+                                  max: player
+                                      .current.value.audio.duration.inSeconds
+                                      .toDouble(),
+                                  activeColor: Colors.blue,
+                                  inactiveColor: Colors.white,
+                                  divisions: player
+                                      .current.value.audio.duration.inSeconds,
+                                  onChanged: (value) {
+                                    seeking = true;
+                                    currentPosition =
+                                        Duration(seconds: value.toInt());
+                                  },
+                                  onChangeEnd: (value) {
+                                    seeking = false;
+                                    player
+                                        .seek(Duration(seconds: value.toInt()));
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                timeFormatter(
+                                    currentPosition.inSeconds.roundToDouble()),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(250, 250, 250, 0.46)),
+                              ),
+                              Text(
+                                timeFormatter(player
+                                    .current.value.audio.duration.inSeconds
+                                    .roundToDouble()),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(250, 250, 250, 0.46)),
+                              )
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.favorite_border,
+                              color: Colors.white54,
+                            ),
+                            onPressed: null),
+                      ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.skip_previous,
+                              color: Color.fromRGBO(250, 250, 250, 0.95),
+                              size: 50,
+                            ),
+                            onPressed: (){
+                              player.previous();
+                            }),
+                      ),
+                      Container(
+                        width: 80,
+                        height: 80,
+                        child: IconButton(
+                            icon: Icon(
+                              player.isPlaying.value
+                                  ? Icons.pause_circle_filled
+                                  : Icons.play_circle_filled,
+                              size: 70,
+                              color: Color.fromRGBO(250, 250, 250, 0.95),
+                            ),
+                            onPressed: () async {
+                              await player.playOrPause();
+                              setState(() {});
+                            }),
+                      ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.skip_next,
+                              color: Color.fromRGBO(250, 250, 250, 0.95),
+                              size: 50,
+                            ),
+                            onPressed: (){
+                              player.next();
+                            }),
+                      ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.remove_circle_outline_outlined,
+                              color: Colors.white54,
+                            ),
+                            onPressed: (){}),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           );
         }

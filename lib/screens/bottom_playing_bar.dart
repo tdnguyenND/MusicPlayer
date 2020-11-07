@@ -24,7 +24,13 @@ class _BottomPlayingBarState extends State<BottomPlayingBar> {
         Metas metas = snapshot.data.metas;
         return PlayingSongCard(metas: metas);
       }
-      return Center(child: Text('Your playing song here'));
+      return Container(
+        color: Color(0xFF1db954),
+        child: Center(
+          child: Text('Your playing song here',
+          style: TextStyle(color: Colors.white,
+          fontSize: 16,
+          letterSpacing: 0.5),)));
     });
   }
 }

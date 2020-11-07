@@ -144,7 +144,7 @@ class _LibraryState extends State<Library> {
                                           width: 25,
                                         ),
                                         Container(
-                                          width: 230,
+                                          width: 200,
                                           child: Text(
                                             playlist.name ?? 'playlist name',
                                             style: TextStyle(

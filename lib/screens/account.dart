@@ -43,7 +43,7 @@ class _AccountState extends State<Account> {
                           height: 200,
                           child: Center(
                             child: Text(
-                              "Hello",
+                              "Continue with",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 30
@@ -52,10 +52,11 @@ class _AccountState extends State<Account> {
                           ),
                         ),
                         Container(
+
                           height: 50,
                           child: SignInButton(
                             Buttons.FacebookNew,
-                            text: "Continue with Facebook",
+                            text: "Facebook",
                             onPressed: signInWithFacebook,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -69,7 +70,7 @@ class _AccountState extends State<Account> {
                           height: 50,
                           child: SignInButton(
                             Buttons.Google,
-                            text: "Continue with Google",
+                            text: "Google",
                             onPressed: signInWithGoogle,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),

@@ -41,16 +41,16 @@ class _SearchState extends State<Search> {
       home: Material(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Color(0xFF191414),
-              Color(0xFF1ED760),
-              Color(0xFF1db954),
-            ],
-            begin: Alignment.bottomRight,
-            end: Alignment.topRight,
-          )),
+            decoration: BoxDecoration(
+            gradient: LinearGradient(
+        colors: [
+          Color(0xff191414),
+          Color(0xFF1db954),
+          Color(0xff191414),
+        ],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topLeft,
+      )),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[

@@ -48,9 +48,11 @@ class _WrapperState extends State<Wrapper> {
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: status,
+          //backgroundColor: Colors.black54.withOpacity(0.7),
+          backgroundColor: Colors.green,
           items: screens
               .map((scr) => BottomNavigationBarItem(
-                  title: Text(scr['name']), icon: scr['icon']))
+                  title: Text(scr['name']), icon: scr['icon'],backgroundColor: Colors.white))
               .toList(),
           onTap: (value) {
             setState(() {
