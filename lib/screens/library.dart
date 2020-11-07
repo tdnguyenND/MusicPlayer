@@ -34,7 +34,6 @@ class _LibraryState extends State<Library> {
             }
             if (snapshot.hasData) {
               List<PlaylistDetail> listOfPlaylist = snapshot.data;
-              String urlAvatar = user.photoURL??'https://static.standard.co.uk/s3fs-public/thumbnails/image/2019/03/15/17/pixel-dogsofinstagram-3-15-19.jpg';
               return Scaffold(
                 backgroundColor: Colors.grey[900],
                 body: Container(

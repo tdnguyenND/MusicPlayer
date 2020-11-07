@@ -87,7 +87,6 @@ class _AccountState extends State<Account> {
               );
             } else {
               User user = snapshot.data;
-              String urlAvatar = user.photoURL??'https://cf.shopee.vn/file/e7dd17a0cc48f110a3da8c693e910b15';
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
