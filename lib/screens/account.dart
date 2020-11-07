@@ -40,9 +40,23 @@ class _AccountState extends State<Account> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
+                          height: 200,
+                          child: Center(
+                            child: Text(
+                              "Continue with",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+
                           height: 50,
                           child: SignInButton(
                             Buttons.FacebookNew,
+                            text: "Facebook",
                             onPressed: signInWithFacebook,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -56,7 +70,7 @@ class _AccountState extends State<Account> {
                           height: 50,
                           child: SignInButton(
                             Buttons.Google,
-                            text: "Sign up with Google",
+                            text: "Google",
                             onPressed: signInWithGoogle,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -73,6 +87,7 @@ class _AccountState extends State<Account> {
               );
             } else {
               User user = snapshot.data;
+              String urlAvatar = user.photoURL??'https://cf.shopee.vn/file/e7dd17a0cc48f110a3da8c693e910b15';
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
@@ -102,7 +117,7 @@ class _AccountState extends State<Account> {
                               height: 20,
                             ),
                             Text(
-                              'Son Tung',
+                              user.displayName ?? 'display name',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 23),
                             ),
@@ -110,7 +125,7 @@ class _AccountState extends State<Account> {
                               height: 10,
                             ),
                             Text(
-                              'sontung@gmail.com',
+                              user.email ?? 'Not connected to email',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18),
                             ),
@@ -214,37 +229,3 @@ class _AccountState extends State<Account> {
     );
   }
 }
-//
-// ListView(children: [
-// FlatButton(
-// color: Colors.grey[200],
-// child: Text('Up load song'),
-// onPressed: () {
-// Navigator.push(context,
-// MaterialPageRoute(
-// builder: (context) => UploadScreen()
-// )
-// );
-// },
-// ),
-// FlatButton(
-// color: Colors.grey[200],
-// child: Text('Song you liked'),
-// onPressed: () async {
-// PlaylistDetail pd = await getLovedSongAsPlaylist(user.uid);
-// Navigator.push(
-// context,
-// MaterialPageRoute(
-// builder: (context) =>
-// PlaylistWidget(playlistDetail: pd)));
-// },
-// ),
-// FlatButton(
-// color: Colors.grey[200],
-// child: Text('Log out'),
-// onPressed: () async {
-// await player.stop();
-// logOut();
-// },
-// ),
-// ]);
