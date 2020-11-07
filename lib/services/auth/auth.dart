@@ -12,8 +12,8 @@ Future<User> signInWithFacebook() async {
   try {
     final FacebookLogin facebookLogIn = FacebookLogin();
     final result = await facebookLogIn.logIn(['email']);
-    final token = result.accessToken.token;
     if (result.status == FacebookLoginStatus.loggedIn) {
+      final token = result.accessToken.token;
       final AuthCredential credential = FacebookAuthProvider.credential(token);
       final UserCredential userCredential =
           await auth.signInWithCredential(credential);
