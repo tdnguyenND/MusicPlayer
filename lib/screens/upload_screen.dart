@@ -4,8 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:media_metadata_plugin/media_media_data.dart';
+import 'package:music_player/error/upload_error.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/services/firestore/push_data.dart';
+import 'package:music_player/services/firestore/song_collection.dart';
+import 'package:music_player/services/storage/upload.dart';
 import 'package:path/path.dart';
 import 'package:media_metadata_plugin/media_metadata_plugin.dart';
 
@@ -44,13 +46,14 @@ class _UploadScreenState extends State<UploadScreen> {
               Container(
                 width: 100,
                 height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black)
-                ),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
                 child: InkWell(
                   onTap: selectImage,
                   child: Center(
-                    child: _image == null ? Text('Select Image') : Image.file(_image),
+                    child: _image == null
+                        ? Text('Select Image')
+                        : Image.file(_image),
                   ),
                 ),
               ),
@@ -99,7 +102,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         image: _image,
                         name: _name);
                     try {
-                      pushSong(songDetail);
+                      uploadSong(songDetail);
                     } catch (e) {
                       Fluttertoast.showToast(msg: 'upload failed');
                     }
@@ -121,8 +124,7 @@ class _UploadScreenState extends State<UploadScreen> {
       _image = File(result.files.single.path);
     }
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   void selectSong() async {
@@ -132,7 +134,28 @@ class _UploadScreenState extends State<UploadScreen> {
     _song = File(path);
     AudioMetaData metaData = await MediaMetadataPlugin.getMediaMetaData(path);
     _songNameController.text = _name = basenameWithoutExtension(path);
-    _albumNameController.text = metaData.album;
-    _artistNameController.text = metaData.artistName;
+    _albumNameController.text = _album = metaData.album;
+    _artistNameController.text = _artist = metaData.artistName;
+  }
+
+  void uploadSong(SongDetail songDetail) async {
+    Future.wait([
+      uploadImage(songDetail.image).then((value) {
+        songDetail.imageUrl = value;
+      }).catchError((error) {
+        print(error.toString());
+      }),
+      uploadAudio(songDetail.song).then((value) {
+        songDetail.songUrl = value;
+      }).catchError((error) {
+        print(error.toString());
+      })
+    ]).then((value) {
+      if (songDetail.imageUrl == null || songDetail.songUrl == null) {
+        throw UploadError(message: 'Push song failed');
+      } else {
+        SongFirestore.create(songDetail);
+      }
+    });
   }
 }

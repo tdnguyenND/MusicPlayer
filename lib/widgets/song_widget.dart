@@ -6,8 +6,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:music_player/models/playlist_detail.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
-import 'package:music_player/services/firestore/push_data.dart';
+import 'package:music_player/services/firestore/playlist_collection.dart';
+import 'package:music_player/services/firestore/user_data_collection.dart';
 import 'package:provider/provider.dart';
 
 class SongWidget extends StatefulWidget {
@@ -51,68 +51,83 @@ class _SongWidgetState extends State<SongWidget> {
                 width: 70,
                 height: 70,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(15.0)),
-                  child: Image.network(detail.imageUrl,fit: BoxFit.cover,),
-                )
+                  borderRadius:
+                      BorderRadius.horizontal(left: Radius.circular(15.0)),
+                  child: Image.network(
+                    detail.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                )),
+            SizedBox(
+              width: 10,
             ),
-            SizedBox(width: 10,),
             Container(
               width: 220,
               height: 70,
-              child:  Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    child: Text(detail.name,
+                    child: Text(
+                      detail.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
-                      ),),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 3,),
-                  Text(detail.artist,
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    detail.artist,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     softWrap: false,
-                    style: TextStyle(
-                        color: Colors.white70
-                    ),)
+                    style: TextStyle(color: Colors.white70),
+                  )
                 ],
               ),
             ),
             Container(
               width: 25,
               child: IconButton(
-                  icon: Icon(Icons.play_arrow,color: Colors.white,),
+                  icon: Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                  ),
                   iconSize: 30,
-                  onPressed: (){
+                  onPressed: () {
                     playlist.shuffle();
                     playlist.insert(0, detail.toAudio());
                     // remove duplicates
                     playlist = playlist.toSet().toList();
-                    player.open(
-                        Playlist(audios: playlist, startIndex: 0),
-                        autoStart: true,
-                        showNotification: true);
+                    player.open(Playlist(audios: playlist, startIndex: 0),
+                        autoStart: true, showNotification: true);
                   }),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             Container(
               width: 25,
               child: IconButton(
                   iconSize: 30,
-                  icon: Icon(Icons.more_vert, color: Colors.white,),
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     _selectOption(context);
-                  }
-              ),
+                  }),
             )
           ],
-
         ),
       ),
     );
@@ -167,7 +182,8 @@ class _SongWidgetState extends State<SongWidget> {
                   ),
                   onPressed: () {
                     if (user != null) {
-                      addOrRemoveLoveSong(user.uid, detail.id);
+                      UserDataFirestore.addOrRemoveSongInLoveSongs(
+                          user.uid, detail.id);
                     } else
                       Fluttertoast.showToast(msg: 'Please log in first');
                   },
@@ -185,7 +201,7 @@ class _SongWidgetState extends State<SongWidget> {
         return AlertDialog(
           title: Text('Select playlist'),
           content: StreamBuilder(
-            stream: userPlaylists(user.uid),
+            stream: PlaylistFirestore.getPlaylistsOfUser(user.uid),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text('Something went wrong');
               if (snapshot.hasData) {
@@ -198,10 +214,9 @@ class _SongWidgetState extends State<SongWidget> {
                             child: Text(playlistDetail.name),
                             onPressed: () async {
                               try {
-                                await addSongToPlaylist(
-                                    uid: user.uid,
-                                    playlistId: playlistDetail.id,
-                                    songId: detail.id);
+                                await PlaylistFirestore
+                                    .addOrRemoveSongInPlaylist(
+                                        playlistDetail.id, detail.id);
                                 Navigator.pop(context);
                               } catch (e) {
                                 Fluttertoast.showToast(

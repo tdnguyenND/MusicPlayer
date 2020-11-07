@@ -59,7 +59,7 @@ class ShazamService {
 
   Future<void> obtainToken() async {
     try {
-      apiToken = await getRapidApiKey();
+      apiToken = await RapidApiKeyFirestore.getAvailableKey();
       setStatus(ShazamServiceStatus.READY);
     } catch (Error) {
       setStatus(ShazamServiceStatus.UNAVAILABLE);
@@ -119,7 +119,7 @@ class ShazamService {
   }
 
   Future<Map> detect(Uint8List data) async {
-    if (apiToken.counter == 0) {
+    if (apiToken.counter <= 0) {
       await obtainToken();
     }
     if (status == ShazamServiceStatus.UNAVAILABLE) return null;
@@ -131,8 +131,7 @@ class ShazamService {
           'content-type': "text/plain",
         },
         body: base64);
-    decreaseApiKeyCounter(apiToken.id);
-    apiToken.counter--;
+    apiToken = await RapidApiKeyFirestore.decreaseApiKeyCounter(apiToken.id);
     var objectResponse = json.decode(response.body);
     if (objectResponse['track'] != null) {
       return {

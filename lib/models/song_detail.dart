@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:music_player/models/serializable.dart';
 
-class SongDetail {
+class SongDetail extends Serializable {
   String id;
 
   final String name;
@@ -34,19 +35,6 @@ class SongDetail {
       this.created,
       this.listenTime = 0}) {
     this.created = this.created ?? Timestamp.now();
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'artist': artist,
-      'album': album,
-      'songUrl': songUrl,
-      'imageUrl': imageUrl,
-      'created': created,
-      'listenTime': listenTime
-    };
   }
 
   Audio toAudio() {
@@ -84,5 +72,33 @@ class SongDetail {
         imageUrl: map['imageUrl'],
         created: map['created'] ?? Timestamp.now(),
         listenTime: map['listenTime'] ?? 0);
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'artist': artist,
+      'album': album,
+      'songUrl': songUrl,
+      'imageUrl': imageUrl,
+      'created': created,
+      'listenTime': listenTime
+    };
+  }
+
+  @override
+  Map<String, dynamic> serializer(){
+    return {
+      'id': id,
+      'name': name,
+      'artist': artist,
+      'album': album,
+      'songUrl': songUrl,
+      'imageUrl': imageUrl,
+      'created': created,
+      'listenTime': listenTime
+    };
   }
 }

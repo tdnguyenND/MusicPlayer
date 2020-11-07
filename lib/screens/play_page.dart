@@ -70,8 +70,7 @@ class _PlayPageState extends State<PlayPage> {
     bool seeking = false;
     Duration currentPosition;
 
-    return MaterialApp(
-        home: StreamBuilder<Audio>(
+    return StreamBuilder<Audio>(
       stream: player.current.map((playing) {
         if (playing == null) return null;
 
@@ -151,7 +150,6 @@ class _PlayPageState extends State<PlayPage> {
                     stream: player.currentPosition,
                     builder: (context, snapshot) {
                       if (!seeking) currentPosition = snapshot.data;
-                      print(currentPosition.inSeconds);
                       return Column(
                         children: [
                           Stack(
@@ -287,6 +285,6 @@ class _PlayPageState extends State<PlayPage> {
         }
         return Text('There are no song playing');
       },
-    ));
+    );
   }
 }

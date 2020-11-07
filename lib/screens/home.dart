@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
+import 'package:music_player/services/firestore/song_collection.dart';
 import 'package:music_player/widgets/list_song_widget.dart';
 
 class Home extends StatefulWidget {
@@ -17,10 +17,10 @@ class _HomeState extends State<Home> {
 
   void loadSong() async {
     Future.wait([
-      getLatestUpload().then((value) {
+      SongFirestore.getUploadRecentlySong().then((value) {
         latestUpload = value;
       }),
-      getTopListenedSong().then((value) {
+      SongFirestore.getTopListenedSong().then((value) {
         topHit = value;
       })
     ]).then((value) {

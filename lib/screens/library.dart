@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/playlist_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
-import 'package:music_player/services/firestore/push_data.dart';
+import 'package:music_player/services/firestore/playlist_collection.dart';
 import 'package:music_player/widgets/playlist_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -27,9 +26,10 @@ class _LibraryState extends State<Library> {
     if (user != null) {
       return MaterialApp(
         home: StreamBuilder(
-          stream: userPlaylists(user.uid),
+          stream: PlaylistFirestore.getPlaylistsOfUser(user.uid),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
+              print(snapshot.error);
               return Text('Something went wrong!');
             }
             if (snapshot.hasData) {
@@ -51,7 +51,8 @@ class _LibraryState extends State<Library> {
                       child: ListView(
                           children: <Widget>[
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
@@ -59,12 +60,14 @@ class _LibraryState extends State<Library> {
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 40,
-                                          fontWeight: FontWeight.bold
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(width: 150,),
+                                    SizedBox(
+                                      width: 150,
+                                    ),
                                     CircleAvatar(
-                                      backgroundImage: NetworkImage(user.photoURL),
+                                      backgroundImage:
+                                          NetworkImage(user.photoURL),
                                       radius: 18,
                                     )
                                   ],
@@ -232,7 +235,7 @@ class _LibraryState extends State<Library> {
                   Navigator.pop(context);
                   PlaylistDetail detail =
                       PlaylistDetail(uid: user.uid, name: _newPlaylistName);
-                  await createPlaylist(detail);
+                  await PlaylistFirestore.create(detail);
                   setState(() {});
                 }
               })
@@ -256,7 +259,7 @@ class _LibraryState extends State<Library> {
           FlatButton(
             child: Text('Delete'),
             onPressed: () {
-              deletePlaylist(detail.id);
+              PlaylistFirestore.remove(detail.id);
               Navigator.pop(context);
               setState(() {});
             },

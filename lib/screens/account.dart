@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:music_player/models/playlist_detail.dart';
 import 'package:music_player/screens/screen.dart';
 import 'package:music_player/services/auth/auth.dart';
+import 'package:music_player/services/firestore/user_data_collection.dart';
 import 'package:music_player/widgets/playlist_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Account extends StatefulWidget {
@@ -44,15 +44,12 @@ class _AccountState extends State<Account> {
                           child: Center(
                             child: Text(
                               "Continue with",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30
-                              ),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 30),
                             ),
                           ),
                         ),
                         Container(
-
                           height: 50,
                           child: SignInButton(
                             Buttons.FacebookNew,
@@ -184,8 +181,9 @@ class _AccountState extends State<Account> {
                                     fontFamily: 'Console'),
                               ),
                               onPressed: () async {
-                                PlaylistDetail pd =
-                                    await getLovedSongAsPlaylist(user.uid);
+                                PlaylistDetail pd = await UserDataFirestore
+                                    .getLoveSongsAsPlaylist(user.uid);
+                                
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

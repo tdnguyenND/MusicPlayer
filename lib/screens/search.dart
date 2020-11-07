@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
+import 'package:music_player/services/firestore/song_collection.dart';
 import 'package:music_player/services/shazam.dart';
 import 'package:music_player/widgets/search_by_single_field_result_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -169,9 +169,9 @@ class _SearchState extends State<Search> {
     setState(() {
       loading = true;
     });
-    searchByNameResult = await searchSongByName(searchKey);
-    searchByAlbumResult = await searchSongByAlbum(searchKey);
-    searchByArtistResult = await searchSongByArtist(searchKey);
+    searchByNameResult = await SongFirestore.searchSongByName(searchKey);
+    searchByAlbumResult = await SongFirestore.searchSongByAlbum(searchKey);
+    searchByArtistResult = await SongFirestore.searchSongByArtist(searchKey);
 
     showSearchResult();
     setState(() {

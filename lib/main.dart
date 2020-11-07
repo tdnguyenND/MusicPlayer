@@ -1,5 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:music_player/services/firestore/push_data.dart';
+import 'package:music_player/services/firestore/song_collection.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/wrapper.dart';
@@ -15,7 +15,7 @@ void main() async {
       if (event == null) return;
       Audio audio = event.audio.audio;
       String songId = audio.metas.id;
-      increaseListenTime(songId);
+      SongFirestore.increaseListenTime(songId);
     });
   runApp(Provider.value(
     value: player,
