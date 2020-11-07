@@ -66,13 +66,6 @@ class _AccountState extends State<Account> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          'Hip Hop never die',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        )
                       ],
                     ),
                   ),
