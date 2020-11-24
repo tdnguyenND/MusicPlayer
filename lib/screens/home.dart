@@ -28,10 +28,39 @@ class _HomeState extends State<Home> {
         homeBase = SingleChildScrollView(
           child: Column(
             children: [
-              Text('Upload recently'),
+              SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,                
+                children: [
+                  SizedBox(width: 20),
+                  Text('Recently upload',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
               ListSongWidget(listSongDetails: latestUpload),
-              Text('Top listen'),
-              ListSongWidget(listSongDetails: topHit)
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 20),
+                  Text('Top listen',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4),
+              ListSongWidget(listSongDetails: topHit),
+              SizedBox(height: 12),
             ],
           ),
         );
@@ -51,8 +80,6 @@ class _HomeState extends State<Home> {
         ? SpinKitCircle(
             color: Colors.black,
           )
-        : SingleChildScrollView(
-            child: homeBase,
-          );
+        : homeBase;
   }
 }

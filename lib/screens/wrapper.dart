@@ -13,10 +13,10 @@ class _WrapperState extends State<Wrapper> {
   int status = 0;
 
   List<Map> screens = [
-    {'name': 'home', 'widget': Home(), 'icon': Icon(Icons.home)},
-    {'name': 'search', 'widget': Search(), 'icon': Icon(Icons.search)},
-    {'name': 'library', 'widget': Library(), 'icon': Icon(Icons.library_music)},
-    {'name': 'account', 'widget': Account(), 'icon': Icon(Icons.account_circle)}
+    {'name': 'Home', 'widget': Home(), 'icon': Icon(Icons.home)},
+    {'name': 'Search', 'widget': Search(), 'icon': Icon(Icons.search)},
+    {'name': 'Library', 'widget': Library(), 'icon': Icon(Icons.library_music)},
+    {'name': 'Account', 'widget': Account(), 'icon': Icon(Icons.account_circle)}
   ];
 
   @override
@@ -29,6 +29,7 @@ class _WrapperState extends State<Wrapper> {
     return StreamProvider.value(
       value: auth.authStateChanges(),
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Column(
           children: [
             Expanded(
@@ -44,7 +45,9 @@ class _WrapperState extends State<Wrapper> {
           type: BottomNavigationBarType.fixed,
           currentIndex: status,
           //backgroundColor: Colors.black54.withOpacity(0.7),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF282828),
+          unselectedItemColor: Color(0xFFC4C4C4),
+          selectedItemColor: Colors.white,
           items: screens
               .map((scr) => BottomNavigationBarItem(
                   title: Text(scr['name']), icon: scr['icon'],backgroundColor: Colors.white))

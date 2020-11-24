@@ -19,14 +19,13 @@ class _PlayingSongCardState extends State<PlayingSongCard> {
     Metas metas = widget.metas;
     AssetsAudioPlayer player = Provider.of<AssetsAudioPlayer>(context);
     return FlatButton(
-      color: Colors.green,
+      color: Color(0xFF272727),
       padding: EdgeInsets.zero,
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => PlayPage()));
         },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.network(metas.image.path),
             SizedBox(width:10),
@@ -34,19 +33,23 @@ class _PlayingSongCardState extends State<PlayingSongCard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(metas.title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-                ),),
+                Container(
+                  width: 254,
+                  child: Text(metas.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
+                  ),),
+                ),
                 Text(
-                  metas.artist.toUpperCase(), 
-                  style: TextStyle(fontSize: 18,
-                  color: Colors.white60))
+                  metas.artist, 
+                  style: TextStyle(fontSize: 14,
+                  color: Color(0xFFC4C4C4)))
               ],
             ),
-            SizedBox(width:120),
+            SizedBox(width:18),
             Icon(Icons.favorite_border,
             color: Colors.white,),
             StreamBuilder<bool>(
@@ -63,7 +66,7 @@ class _PlayingSongCardState extends State<PlayingSongCard> {
                   return Container();
               },
             ),
-            SizedBox(width:10)
+            
           ],
         ));
   }

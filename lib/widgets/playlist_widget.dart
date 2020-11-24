@@ -28,64 +28,77 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
   Widget build(BuildContext context) {
     if (listSongDetails != null) {
       return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color(0xFF191414),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: Text(playlistDetail.name ?? 'Playlist name'),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.favorite_border),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.more_vert),
-              ),
-            ],
-          ),
           body: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color(0xff191414),
-                Color(0xFF1db954),
-                Color(0xff191414),
-              ],
-              begin: Alignment.bottomLeft,
-              end: Alignment.topLeft,
-            )),
-            child: ListView(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(height: 20),
-                      Container(width: 200, height: 200, color: Colors.white),
-                      SizedBox(height: 20),
-                      Text(
-                        playlistDetail.name.toUpperCase() ?? 'Playlist name',
-                        style: TextStyle(
+            color: Color(0xFF121212),
+            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[                      
+                      Container(
+                        width: 24,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24),
+                            size: 24,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      ListSongWidget(
-                        listSongDetails: listSongDetails,
-                        playable: true,
+                      SizedBox(width: 30),
+                      Container(
+                        width: 280,
+                        child: Text(playlistDetail.name ?? 'Playlist name',
+                          style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ],
-                  ),
+                      Container(
+                        width: 24,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 24,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ]
                 ),
-              ],
+                SizedBox(height: 24),
+                SizedBox(width: 24),
+                SizedBox(
+                  width: 200,
+                  child: Image.asset('assets/img2.jpg'),
+                ),
+                SizedBox(height: 24),
+                Text(playlistDetail.name ?? 'Playlist name',
+                  style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 8),
+                ListSongWidget(
+                  listSongDetails: listSongDetails,
+                  playable: true,
+                ),
+            ],)
             ),
-          ));
+          );
     } else
       return SpinKitCircle(
         color: Colors.black,

@@ -95,43 +95,48 @@ class _PlayPageState extends State<PlayPage> {
                 begin: Alignment.bottomLeft,
                 end: Alignment.topLeft,
               )),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.white54,
-                          size: 24,
+                  Row(   
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,                 
+                    children: <Widget>[                      
+                      Container(
+                        width: 24,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
                       ),
                       Text(
                         data.metas.artist,
                         style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 16,
                             color: Colors.white,
-                            fontFamily: 'PT Sans'),
+                          ),
                       ),
-                      Icon(Icons.more_vert, color: Colors.white54, size: 24),
+                      Container(
+                        width: 24,
+                        child: Icon(Icons.more_vert, color: Colors.white, size: 24)),
                     ],
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 24),
                   SizedBox(
-                    width: 320,
+                    width: 280,
                     child: Image.network(path),
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Text(
-                    data.metas.title.toUpperCase(),
+                    data.metas.title,
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

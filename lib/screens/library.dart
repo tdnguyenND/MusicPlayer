@@ -36,52 +36,24 @@ class _LibraryState extends State<Library> {
               List<PlaylistDetail> listOfPlaylist = snapshot.data;
               return Scaffold(
                 backgroundColor: Colors.grey[900],
-                body: Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Color(0xff191414),
-                              Color(0xFF1db954),
-                            ],
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topLeft,
-                            stops: [0.015, 0.7])),
+                body: Container(                    
+                    color: Color(0xFF000000),                    
                     child: Container(
-                      margin: EdgeInsets.fromLTRB(15, 30, 10, 0),
-                      child: ListView(
-                          children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Nhạc',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 40,
-                                          fontWeight: FontWeight.bold),
+                      margin: EdgeInsets.fromLTRB(12, 30, 12, 0),
+                      child: ListView(                        
+                          children: <Widget>[                                                                               
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Library',
+                                          style: TextStyle(    
+                                            color: Colors.white,
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 150,
-                                    ),
-                                    CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(user.photoURL),
-                                      radius: 18,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Playlist',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(height: 20),
                                 Card(
                                   color: Colors.grey[900],
@@ -104,12 +76,12 @@ class _LibraryState extends State<Library> {
                                           width: 15,
                                         ),
                                         Text(
-                                          'Tạo playlist',
+                                          'Create playlist',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
                                               fontSize: 20,
-                                              letterSpacing: 0.6),
+                                            ),
                                         )
                                       ],
                                     ),

@@ -32,9 +32,21 @@ class _AccountState extends State<Account> {
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/1.jpg'),
-                          fit: BoxFit.cover)),
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          stops: [
+                        0.1,
+                        0.4,
+                        0.6,
+                        0.9
+                      ],
+                          colors: [
+                        Colors.yellow,
+                        Colors.red,
+                        Colors.indigo,
+                        Colors.teal
+                      ])),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -44,8 +56,10 @@ class _AccountState extends State<Account> {
                           child: Center(
                             child: Text(
                               "Continue with",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 30),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ),
@@ -70,7 +84,7 @@ class _AccountState extends State<Account> {
                             text: "Google",
                             onPressed: signInWithGoogle,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                           ),
                         ),
@@ -87,14 +101,8 @@ class _AccountState extends State<Account> {
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Color(0xff191414),
-                            Color(0xFF1db954),
-                          ],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topLeft,
-                          stops: [0.015, 0.7])),
+                    color: const Color(0xFF121212),
+                  ),
                   child: Column(
                     children: [
                       Center(
@@ -114,21 +122,44 @@ class _AccountState extends State<Account> {
                             ),
                             Text(
                               user.displayName ?? 'display name',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 23),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 6,
                             ),
                             Text(
                               user.email ?? 'Not connected to email',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            SizedBox(height: 20),
+                            Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  color: Color(0xFF1DB954)),
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                child: Text(
+                                  'Log out',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                onPressed: () async {
+                                  await player.stop();
+                                  logOut();
+                                },
+                              ),
                             ),
                             SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
+                              height: 50,
                               width: 400,
                               child: Divider(
                                 color: Colors.white,
@@ -147,14 +178,14 @@ class _AccountState extends State<Account> {
                             child: RaisedButton(
                               color: Color(0xffd4f8dd).withOpacity(0.45),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                'Up load song',
+                                'Upload song',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: 'Console'),
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
                               onPressed: () {
                                 Navigator.push(
@@ -171,47 +202,24 @@ class _AccountState extends State<Account> {
                             child: RaisedButton(
                               color: Color(0xffd4f8dd).withOpacity(0.45),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
                                 'Song you liked',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: 'Console'),
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
                               onPressed: () async {
                                 PlaylistDetail pd = await UserDataFirestore
                                     .getLoveSongsAsPlaylist(user.uid);
-                                
+
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => PlaylistWidget(
                                             playlistDetail: pd)));
-                              },
-                            ),
-                          ),
-                          Container(
-                            height: 70,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 10),
-                            child: RaisedButton(
-                              colorBrightness: Brightness.light,
-                              color: Color(0xffd4f8dd).withOpacity(0.45),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Text(
-                                'Log out',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: 'Console'),
-                              ),
-                              onPressed: () async {
-                                await player.stop();
-                                logOut();
                               },
                             ),
                           ),

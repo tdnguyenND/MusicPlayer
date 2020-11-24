@@ -37,13 +37,13 @@ class _SongWidgetState extends State<SongWidget> {
     player = Provider.of<AssetsAudioPlayer>(context);
 
     return Container(
-      margin: EdgeInsets.all(5),
+      margin: EdgeInsets.all(4),
       width: 380,
-      height: 70,
+      height: 76,
       child: Card(
         color: Colors.grey[700],
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
           children: [
@@ -52,7 +52,7 @@ class _SongWidgetState extends State<SongWidget> {
                 height: 70,
                 child: ClipRRect(
                   borderRadius:
-                      BorderRadius.horizontal(left: Radius.circular(15.0)),
+                      BorderRadius.horizontal(left: Radius.circular(5)),
                   child: Image.network(
                     detail.imageUrl,
                     fit: BoxFit.cover,
@@ -68,7 +68,7 @@ class _SongWidgetState extends State<SongWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Container(
                     child: Text(
@@ -77,8 +77,9 @@ class _SongWidgetState extends State<SongWidget> {
                       maxLines: 1,
                       softWrap: false,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -90,7 +91,7 @@ class _SongWidgetState extends State<SongWidget> {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     softWrap: false,
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(fontSize: 14, color: Color(0xFFC4C4C4)),
                   )
                 ],
               ),
@@ -157,7 +158,7 @@ class _SongWidgetState extends State<SongWidget> {
                       ),
                       Text(
                         detail.name,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         detail.artist,

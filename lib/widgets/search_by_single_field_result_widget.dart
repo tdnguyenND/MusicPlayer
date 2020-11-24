@@ -17,7 +17,19 @@ class SearchBySingleFieldResultWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget content = _contentAsWidget(context);
     return Column(
-      children: [Text('Search result for $field'), content],
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: 10),
+            Text(
+              'Search result for $field',
+              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        content
+      ],
     );
   }
 
@@ -39,14 +51,21 @@ class SearchBySingleFieldResultWidget extends StatelessWidget {
                       listSongDetails: searchResult.sublist(0, limit))
                 ] +
                 [
-                  FlatButton(
-                    child: Text('View all'),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => _fullScreen(context)));
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      FlatButton(                  
+                        color: Color(0x00000000),
+                        child: Text('View all',
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => _fullScreen(context)));
+                        },
+                      ),
+                    ],
                   )
                 ],
           )
@@ -57,13 +76,36 @@ class SearchBySingleFieldResultWidget extends StatelessWidget {
 
   Widget _fullScreen(context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Search result for $field'),
-        ),
+      backgroundColor: Colors.black,
         body: SingleChildScrollView(
-          child: ListSongWidget(
-            listSongDetails: searchResult,
-          ),
-        ));
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 4),
+                  IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
+                    Navigator.pop(context);
+                  }, color: Colors.white),
+                ],
+              ),
+              Row(                
+                children: [
+                  SizedBox(width: 18),
+                  Text('Search result for $field',
+                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(width: 12),
+                  ListSongWidget(
+                    listSongDetails: searchResult,
+                  ),
+                ],
+              ),
+          ],
+    )));
   }
 }

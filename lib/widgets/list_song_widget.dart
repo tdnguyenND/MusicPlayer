@@ -29,7 +29,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               create: (context) => listSongDetails
                   .map((SongDetail songDetail) => songDetail.toAudio())
                   .toList(),
-              child: Column(
+              child: Column(                
                 children: listSongDetails
                     .map((SongDetail songDetail) => SongWidget(
                           songDetail: songDetail,
@@ -38,7 +38,9 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                     .toList(),
               ))
           : Center(
-              child: Text('This playlist is empty'),
+              child: Text('This playlist is empty',
+                style: TextStyle(color: Colors.white)
+              ),
             );
     } else
       return SpinKitCircle(

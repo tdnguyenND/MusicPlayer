@@ -45,88 +45,89 @@ class _SearchState extends State<Search> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             decoration: BoxDecoration(
-            gradient: LinearGradient(
-        colors: [
-          Color(0xff191414),
-          Color(0xFF1db954),
-          Color(0xff191414),
-        ],
-        begin: Alignment.bottomLeft,
-        end: Alignment.topLeft,
-      )),
+              color: const Color(0xFF000000),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                height: 70,
+                height: 40,
               ),
               Text(
-                'Tìm kiếm',
+                'Search',
                 style: TextStyle(
-                    fontSize: 60,
+                    fontSize: 40,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 1.5),
+                  ),
               ),
               SizedBox(
                 height: 20,
               ),
-              Card(
-                color: Colors.white.withOpacity(0.95),
-                child: TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      isDense: true,
-                      hintText: "Nghệ sĩ, bài hát, hoặc podcast",
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          setState(searchAndShowResult);
-                        },
-                      ),
-                    ),
-                    onChanged: (value) {
-                      searchKey = value;
-                      searchAndShowResult();
-                    },
-                    controller: _controller,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black,
-                      letterSpacing: 0.5,
-                    )),
-              ),
-              Card(
-                child: FlatButton(
-                  child: Text('shazam'),
-                  onPressed: () {
-                    Navigator.push<Map>(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SongDetector()))
-                        .then((value) {
-                      updateWithSearchKey(value['title']);
-                    });
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
               Row(
                 children: [
-                  Text(
-                    'Duyệt tìm tất cả',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+                  Container(
+                    height: 56,
+                    width: 300,
+                    child: Card(
+                      color: Colors.white.withOpacity(0.95),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            isDense: true,
+                            hintText: "Artists, songs and more",
+                            hintStyle: TextStyle(fontSize: 16, color: Color(0xFF7a7a7a), fontWeight: FontWeight.w400),
+                            
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                setState(searchAndShowResult);
+                              },
+                            ),
+                          ),
+                          onChanged: (value) {
+                            searchKey = value;
+                            searchAndShowResult();
+                          },
+                          controller: _controller,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.black,
+                          )),
                     ),
                   ),
+                  Container(
+                    height: 56,
+                    width: 90,
+                    child: Card(
+                      margin: EdgeInsets.all(4),
+                      color: Color(0xFF1DB954),
+                      child: FlatButton(                                        
+                        child: Text('Shazam',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push<Map>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SongDetector()))
+                          .then((value) {
+                        updateWithSearchKey(value['title']);
+                      });
+                    },
+                ),
+              ),
+                  ),
+
                 ],
               ),
               Expanded(
