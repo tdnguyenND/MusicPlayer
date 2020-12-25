@@ -24,7 +24,7 @@ void main() async {
       routes: {
         '/': (context) => Wrapper(),
       },
-      theme: ThemeData(fontFamily: 'SF-Pro-Display'),    
+      theme: ThemeData(fontFamily: 'SF-Pro-Display'),
     ),
   ));
 }

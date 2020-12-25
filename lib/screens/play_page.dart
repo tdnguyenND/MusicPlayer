@@ -86,15 +86,8 @@ class _PlayPageState extends State<PlayPage> {
           return Scaffold(
             body: new Container(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [
-                  Color(0xff191414),
-                  Color(0xFF1db954),
-                  Color(0xff191414),
-                ],
-                begin: Alignment.bottomLeft,
-                end: Alignment.topLeft,
-              )),
+                color: Colors.black,
+              ),
               padding: EdgeInsets.symmetric(horizontal: 4, vertical: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

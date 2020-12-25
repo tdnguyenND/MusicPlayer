@@ -7,5 +7,6 @@ List<List<dynamic>> splitList(List list) {
 }
 
 bool matchWithoutCaseSensitive(String lookFor, String lookIn){
+  if(lookIn == null) return false;
   return RegExp(lookFor.toLowerCase()).hasMatch(lookIn.toLowerCase());
 }

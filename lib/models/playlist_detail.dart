@@ -15,6 +15,12 @@ class PlaylistDetail extends Serializable {
         uid: map['uid'], name: map['name'], listSongs: map['listSongs']);
   }
 
+  void fromMapWithoutID(Map<String, dynamic> map){
+    this.uid = map['uid'];
+    this.name = map['name'];
+    this.listSongs = map['listSongs'];
+  }
+
   @override
   Map<String, dynamic> serializer() {
     return {

@@ -158,7 +158,10 @@ class _SongWidgetState extends State<SongWidget> {
                       ),
                       Text(
                         detail.name,
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                       Text(
                         detail.artist,
@@ -171,13 +174,17 @@ class _SongWidgetState extends State<SongWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Icon(
-                        Icons.favorite,
-                        color: Colors.green,
+                      Expanded(
+                        child: Icon(
+                          Icons.favorite,
+                          color: Colors.green,
+                        ),
                       ),
-                      Text(
-                        'Thich',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      Expanded(
+                        child: Text(
+                          'Like',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       )
                     ],
                   ),
@@ -189,6 +196,27 @@ class _SongWidgetState extends State<SongWidget> {
                       Fluttertoast.showToast(msg: 'Please log in first');
                   },
                 ),
+                FlatButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Icon(
+                            Icons.playlist_add,
+                            color: Colors.green,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Add to playlist',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      selectPlaylistToAdd(context);
+                    }),
               ],
             ),
           );
@@ -206,8 +234,10 @@ class _SongWidgetState extends State<SongWidget> {
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text('Something went wrong');
               if (snapshot.hasData) {
-                List<PlaylistDetail> userPlaylist = snapshot.data;
-                return userPlaylist == null
+                Future<List<PlaylistDetail>> userPlaylist = snapshot.data;
+                return FutureBuilder(future: userPlaylist, builder: (context, snapshot){
+                  List<PlaylistDetail> userPlaylist = snapshot.data;
+                  return !snapshot.hasData
                     ? Text('You don\'t have any playlist yet')
                     : Column(
                         children: userPlaylist.map((playlistDetail) {
@@ -220,6 +250,7 @@ class _SongWidgetState extends State<SongWidget> {
                                         playlistDetail.id, detail.id);
                                 Navigator.pop(context);
                               } catch (e) {
+                                print(e);
                                 Fluttertoast.showToast(
                                     msg:
                                         'This song is already in this playlist');
@@ -228,6 +259,7 @@ class _SongWidgetState extends State<SongWidget> {
                           );
                         }).toList(),
                       );
+                });
               } else
                 return SpinKitCircle(
                   color: Colors.black,

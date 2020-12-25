@@ -32,19 +32,17 @@ class PlaylistFirestore {
     return playlistRef.doc(id).delete();
   }
 
-  static Stream<List<PlaylistDetail>> getPlaylistsOfUser(String uid) {
-    return playlistRef.get().asStream().map((QuerySnapshot snapshot) {
+  static Stream<Future<List<PlaylistDetail>>> getPlaylistsOfUser(String uid) {
+    return playlistRef.get().asStream().map((QuerySnapshot snapshot) async {
       List<QueryDocumentSnapshot> docs = snapshot.docs;
       List<PlaylistDetail> res = [];
       for (DocumentSnapshot doc in docs) {
         if (doc.data()['uid'] == uid) {
           Map<String, dynamic> data = doc.data();
-          matchReferenceKey(data, 'listSongs', SongFirestore.getSongById)
-              .then((value) {
-            PlaylistDetail detail = PlaylistDetail.fromMapWithouId(data);
-            detail.id = doc.id;
-            res.add(detail);
-          });
+          await matchReferenceKey(data, 'listSongs', SongFirestore.getSongById);
+          PlaylistDetail detail = PlaylistDetail.fromMapWithouId(data);
+          detail.id = doc.id;
+          res.add(detail);
         }
       }
       return res;
@@ -67,7 +65,9 @@ class PlaylistFirestore {
       String playlistId, String songId) async {
     DocumentSnapshot snapshot = await playlistRef.doc(playlistId).get();
     if (snapshot.exists) {
-      List<String> listSongs = snapshot.data()[listSongsFieldName];
+      List<String> listSongs =
+          List<String>.from(snapshot.data()[listSongsFieldName]);
+      print("*");
       return listSongs != null &&
           listSongs is List &&
           listSongs.contains(songId);

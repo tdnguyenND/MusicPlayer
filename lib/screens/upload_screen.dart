@@ -33,83 +33,110 @@ class _UploadScreenState extends State<UploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('upload song'),
-      ),
-      body: Center(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.black,
+      body: Container(
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
-                child: InkWell(
-                  onTap: selectImage,
-                  child: Center(
-                    child: _image == null
-                        ? Text('Select Image')
-                        : Image.file(_image),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: Colors.white),
+                  ],
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF1DB954))),
+                  child: InkWell(
+                    onTap: selectImage,
+                    child: Center(
+                      child: _image == null
+                          ? Text('Select Image')
+                          : Image.file(_image),
+                    ),
                   ),
                 ),
-              ),
-              FlatButton(
-                color: Colors.grey,
-                child: Text('Select Song'),
-                onPressed: selectSong,
-              ),
-              TextFormField(
-                controller: _songNameController,
-                validator: (val) =>
-                    val == null ? "Song name is required" : null,
-                decoration: InputDecoration(hintText: 'Enter name'),
-                onChanged: (value) {
-                  _name = value;
-                },
-              ),
-              TextFormField(
-                controller: _albumNameController,
-                validator: (val) =>
-                    val == null ? "Album name is required" : null,
-                decoration: InputDecoration(hintText: 'Enter album name'),
-                onChanged: (value) {
-                  _album = value;
-                },
-              ),
-              TextFormField(
-                controller: _artistNameController,
-                validator: (val) =>
-                    val == null ? "Artist name is required" : null,
-                decoration: InputDecoration(hintText: 'Enter artist name'),
-                onChanged: (value) {
-                  _artist = value;
-                },
-              ),
-              RaisedButton(
-                child: Text('upload'),
-                onPressed: () {
-                  if (_formKey.currentState.validate() &&
-                      _song != null &&
-                      _image != null) {
-                    SongDetail songDetail = SongDetail(
-                        album: _album,
-                        artist: _artist,
-                        song: _song,
-                        image: _image,
-                        name: _name);
-                    try {
-                      uploadSong(songDetail);
-                    } catch (e) {
-                      Fluttertoast.showToast(msg: 'upload failed');
+                FlatButton(
+                  color: Color(0xFF1DB954),
+                  child: Text(
+                    'Select Song',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  onPressed: selectSong,
+                ),
+                TextFormField(
+                  controller: _songNameController,
+                  validator: (val) =>
+                      val == null ? "Song name is required" : null,
+                  decoration: InputDecoration(
+                    hintText: 'Enter name',
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  onChanged: (value) {
+                    _name = value;
+                  },
+                ),
+                TextFormField(
+                  controller: _albumNameController,
+                  validator: (val) =>
+                      val == null ? "Album name is required" : null,
+                  decoration: InputDecoration(
+                    hintText: 'Enter album name',
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  onChanged: (value) {
+                    _album = value;
+                  },
+                ),
+                TextFormField(
+                  controller: _artistNameController,
+                  validator: (val) =>
+                      val == null ? "Artist name is required" : null,
+                  decoration: InputDecoration(
+                    hintText: 'Enter artist name',
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  onChanged: (value) {
+                    _artist = value;
+                  },
+                ),
+                RaisedButton(
+                  color: Color(0xFF1DB954),
+                  child: Text(
+                    'Upload',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState.validate() &&
+                        _song != null &&
+                        _image != null) {
+                      SongDetail songDetail = SongDetail(
+                          album: _album,
+                          artist: _artist,
+                          song: _song,
+                          image: _image,
+                          name: _name);
+                      try {
+                        uploadSong(songDetail);
+                      } catch (e) {
+                        Fluttertoast.showToast(msg: 'upload failed');
+                      }
                     }
-                  }
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       )),

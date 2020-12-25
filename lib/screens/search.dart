@@ -44,8 +44,8 @@ class _SearchState extends State<Search> {
       home: Material(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            decoration: BoxDecoration(
-              color: const Color(0xFF000000),
+          decoration: BoxDecoration(
+            color: const Color(0xFF000000),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -56,10 +56,10 @@ class _SearchState extends State<Search> {
               Text(
                 'Search',
                 style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -74,12 +74,14 @@ class _SearchState extends State<Search> {
                       child: TextFormField(
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
                             isDense: true,
                             hintText: "Artists, songs and more",
-                            hintStyle: TextStyle(fontSize: 16, color: Color(0xFF7a7a7a), fontWeight: FontWeight.w400),
-                            
+                            hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF7a7a7a),
+                                fontWeight: FontWeight.w400),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0)),
                             suffixIcon: IconButton(
@@ -102,32 +104,32 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   Container(
-                    height: 56,
+                    height: 50,
                     width: 90,
                     child: Card(
-                      margin: EdgeInsets.all(4),
+                      margin: EdgeInsets.all(1),
                       color: Color(0xFF1DB954),
-                      child: FlatButton(                                        
-                        child: Text('Shazam',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                      child: FlatButton(
+                        child: Text(
+                          'Detect',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push<Map>(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SongDetector()))
+                              .then((value) {
+                            updateWithSearchKey(value['title']);
+                          });
+                        },
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push<Map>(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SongDetector()))
-                          .then((value) {
-                        updateWithSearchKey(value['title']);
-                      });
-                    },
-                ),
-              ),
                   ),
-
                 ],
               ),
               Expanded(
@@ -231,13 +233,19 @@ class _SongDetectorState extends State<SongDetector> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Detect Song')),
+        appBar: AppBar(
+            backgroundColor: Colors.black,
+            title: Text('Song detection',
+                style: TextStyle(color: Colors.white, fontSize: 24))),
+        backgroundColor: Colors.black,
         body: Center(
             child: StreamBuilder<ShazamServiceStatus>(
                 stream: shazamService.onStatusChanged,
                 builder: (context, snapshot) {
                   if (snapshot.hasError || !snapshot.hasData)
-                    return Text('Something went wrong');
+                    return Text('Something went wrong',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    );
                   ShazamServiceStatus status = snapshot.data;
                   if (status == ShazamServiceStatus.INITIALIZING) {
                     return SpinKitCircle(
@@ -245,7 +253,10 @@ class _SongDetectorState extends State<SongDetector> {
                     );
                   } else if (status == ShazamServiceStatus.UNAVAILABLE) {
                     return Center(
-                        child: Text('This feature is not available for now'));
+                        child: Text(
+                      'This feature is not available for now',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ));
                   } else if (status == ShazamServiceStatus.DETECTING ||
                       status == ShazamServiceStatus.SONG_FOUND) {
                     return Column(
@@ -253,8 +264,13 @@ class _SongDetectorState extends State<SongDetector> {
                       children: [
                         FlatButton(
                             onPressed: shazamService.stopDetecting,
-                            child: Text('Cancel')),
-                        Text('Detecting'),
+                            child: Text('Cancel',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            )),
+                        Text(
+                          'Detecting',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ],
                     );
                   } else {
@@ -264,23 +280,29 @@ class _SongDetectorState extends State<SongDetector> {
                         detectingResult,
                         IconButton(
                             icon: Icon(Icons.mic),
+                            color: Colors.white,
                             onPressed: () async {
                               setState(() {
                                 detectingResult = Container();
                                 shazamService.startDetecting().then((value) {
                                   result = value;
                                   detectingResult = result == null
-                                      ? Text('Not found! Please try again')
+                                      ? Text('Not found! Please try again',
+                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                      )
                                       : Column(
                                           children: [
-                                            Text(result['title']),
-                                            Text(result['subtitle']),
+                                            Text(result['title'], style: TextStyle(color: Colors.white, fontSize: 16),),
+                                            Text(result['subtitle'], style: TextStyle(color: Colors.white, fontSize: 16),),
                                             RaisedButton(
+                                              color: Color(0xFF1DB954),
                                               onPressed: () {
                                                 Navigator.pop(context, result);
                                               },
                                               child:
-                                                  Text('Search for this title'),
+                                                  Text('Search for this title', 
+                                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                                  ),
                                             )
                                           ],
                                         );

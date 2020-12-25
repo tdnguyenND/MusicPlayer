@@ -33,117 +33,129 @@ class _LibraryState extends State<Library> {
               return Text('Something went wrong!');
             }
             if (snapshot.hasData) {
-              List<PlaylistDetail> listOfPlaylist = snapshot.data;
-              return Scaffold(
-                backgroundColor: Colors.grey[900],
-                body: Container(                    
-                    color: Color(0xFF000000),                    
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(12, 30, 12, 0),
-                      child: ListView(                        
-                          children: <Widget>[                                                                               
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Library',
-                                          style: TextStyle(    
-                                            color: Colors.white,
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                SizedBox(height: 20),
-                                Card(
-                                  color: Colors.grey[900],
-                                  borderOnForeground: false,
-                                  child: InkWell(
-                                    onTap: () {
-                                      _createPlaylistWithName();
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          child: Image.asset(
-                                            'assets/add_playlist.png',
-                                            height: 70,
-                                            width: 70,
-                                            fit: BoxFit.fitWidth,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Text(
-                                          'Create playlist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ] +
-                              listOfPlaylist.map((PlaylistDetail playlist) {
-                                return Card(
-                                  color: Colors.grey[900],
-                                  borderOnForeground: false,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PlaylistWidget(
-                                                      playlistDetail:
-                                                          playlist)));
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          child: Image.asset(
-                                            'assets/img1.jpg',
-                                            height: 70,
-                                            width: 70,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 25,
-                                        ),
-                                        Container(
-                                          width: 200,
-                                          child: Text(
-                                            playlist.name ?? 'playlist name',
+              Future<List<PlaylistDetail>> listOfPlaylists = snapshot.data;
+              return FutureBuilder(
+                  future: listOfPlaylists,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return SpinKitCircle(color: Colors.white,);
+                    List<PlaylistDetail> listOfPlaylist = snapshot.data;
+                    return Scaffold(
+                      backgroundColor: Colors.grey[900],
+                      body: Container(
+                          color: Color(0xFF000000),
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(12, 30, 12, 0),
+                            child: ListView(
+                                children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Library',
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: Colors.white,
-                                                fontSize: 20,
-                                                letterSpacing: 0.6),
-                                            overflow: TextOverflow.ellipsis,
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      Card(
+                                        color: Colors.grey[900],
+                                        borderOnForeground: false,
+                                        child: InkWell(
+                                          onTap: () {
+                                            _createPlaylistWithName();
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                child: Image.asset(
+                                                  'assets/add_playlist.png',
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.fitWidth,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              Text(
+                                                'Create playlist',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () {
-                                            _confirmDeletePlaylist(
-                                                context, playlist);
+                                      ),
+                                    ] +
+                                    listOfPlaylist
+                                        .map((PlaylistDetail playlist) {
+                                      return Card(
+                                        color: Colors.grey[900],
+                                        borderOnForeground: false,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PlaylistWidget(
+                                                            playlistDetail:
+                                                                playlist)));
                                           },
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList()),
-                    )),
-              );
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                child: Image.asset(
+                                                  'assets/img1.jpg',
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 25,
+                                              ),
+                                              Container(
+                                                width: 200,
+                                                child: Text(
+                                                  playlist.name ??
+                                                      'playlist name',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      letterSpacing: 0.6),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              SizedBox(width: 30),
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () {
+                                                  _confirmDeletePlaylist(
+                                                      context, playlist);
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList()),
+                          )),
+                    );
+                  });
             } else {
               return SpinKitCircle(
                 color: Colors.black,
@@ -177,7 +189,7 @@ class _LibraryState extends State<Library> {
           child: Row(
             children: <Widget>[
               SizedBox(
-                width: 450,
+                width: 310,
                 child: TextFormField(
                   autofocus: true,
                   validator: (value) => value == null
