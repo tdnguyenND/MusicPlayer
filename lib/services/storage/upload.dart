@@ -12,8 +12,8 @@ Future<String> uploadImage(File image) async {
   return await uploadFileToDirectory(image, imgDir);
 }
 
-Future<String> uploadSong(File song) async {
-  return await uploadFileToDirectory(song, songDir);
+Future<String> uploadAudio(File audio) async {
+  return await uploadFileToDirectory(audio, songDir);
 }
 
 Future<String> uploadFileToDirectory(File file, String dir) async {

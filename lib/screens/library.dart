@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:music_player/models/playlist_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
-import 'package:music_player/services/firestore/push_data.dart';
+import 'package:music_player/services/firestore/playlist_collection.dart';
 import 'package:music_player/widgets/playlist_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -24,101 +24,148 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     user = Provider.of<User>(context);
     if (user != null) {
-      if (selectedPlaylist != null) {
-        return Stack(
-          children: [
-            SingleChildScrollView(
-                          child: Column(
-                children: [
-                  Container(
-                    height: 56,
-                  ),
-                  PlaylistWidget(
-                    playlistDetail: selectedPlaylist,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: AppBar(
-                title: Text(selectedPlaylist.name),
-                leading: new IconButton(
-                  icon: new Icon(Icons.arrow_back_ios, color: Colors.grey),
-                  onPressed: () {
-                    setState(() {
-                      selectedPlaylist = null;
-                    });
-                  },
-                ),
-                backgroundColor: Colors.blue.withOpacity(0.3),
-                elevation: 0.0,
-              ),
-            )
-          ],
-        );
-      } else {
-        return StreamBuilder(
-          stream: userPlaylists(user.uid),
+      return MaterialApp(
+        home: StreamBuilder(
+          stream: PlaylistFirestore.getPlaylistsOfUser(user.uid),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               print(snapshot.error);
               return Text('Something went wrong!');
             }
             if (snapshot.hasData) {
-              List<PlaylistDetail> listOfPlaylist = snapshot.data;
-              return Center(
-                child: Column(
-                  children: <Widget>[] +
-                      listOfPlaylist.map((PlaylistDetail playlist) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 5),
-                          child: FlatButton(
-                            color: Colors.grey[200],
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(playlist.name),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                  ),
-                                  onPressed: () {
-                                    _confirmDeletePlaylist(context, playlist);
-                                  },
-                                )
-                              ],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                selectedPlaylist = playlist;
-                              });
-                            },
-                          ),
-                        );
-                      }).toList() +
-                      [
-                        RaisedButton(
-                          child: Text('Create playlist'),
-                          onPressed: () {
-                            _createPlaylistWithName();
-                          },
-                        )
-                      ],
-                ),
-              );
+              Future<List<PlaylistDetail>> listOfPlaylists = snapshot.data;
+              return FutureBuilder(
+                  future: listOfPlaylists,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return SpinKitCircle(color: Colors.white,);
+                    List<PlaylistDetail> listOfPlaylist = snapshot.data;
+                    return Scaffold(
+                      backgroundColor: Colors.grey[900],
+                      body: Container(
+                          color: Color(0xFF000000),
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(12, 30, 12, 0),
+                            child: ListView(
+                                children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Library',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      Card(
+                                        color: Colors.grey[900],
+                                        borderOnForeground: false,
+                                        child: InkWell(
+                                          onTap: () {
+                                            _createPlaylistWithName();
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                child: Image.asset(
+                                                  'assets/add_playlist.png',
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.fitWidth,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              Text(
+                                                'Create playlist',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ] +
+                                    listOfPlaylist
+                                        .map((PlaylistDetail playlist) {
+                                      return Card(
+                                        color: Colors.grey[900],
+                                        borderOnForeground: false,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PlaylistWidget(
+                                                            playlistDetail:
+                                                                playlist)));
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                child: Image.asset(
+                                                  'assets/img1.jpg',
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 25,
+                                              ),
+                                              Container(
+                                                width: 200,
+                                                child: Text(
+                                                  playlist.name ??
+                                                      'playlist name',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      letterSpacing: 0.6),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              SizedBox(width: 30),
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () {
+                                                  _confirmDeletePlaylist(
+                                                      context, playlist);
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList()),
+                          )),
+                    );
+                  });
             } else {
               return SpinKitCircle(
                 color: Colors.black,
               );
             }
           },
-        );
-      }
+        ),
+      );
     } else {
+      // screen demand log in
       return Center(
         child: Column(
           children: [
@@ -136,12 +183,13 @@ class _LibraryState extends State<Library> {
     showDialog<String>(
       context: context,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
+        contentPadding: const EdgeInsets.all(10.0),
         content: Form(
           key: _formKey,
           child: Row(
             children: <Widget>[
-              Expanded(
+              SizedBox(
+                width: 310,
                 child: TextFormField(
                   autofocus: true,
                   validator: (value) => value == null
@@ -152,6 +200,7 @@ class _LibraryState extends State<Library> {
                   onChanged: (value) {
                     _newPlaylistName = value;
                   },
+                  style: TextStyle(fontSize: 17),
                 ),
               )
             ],
@@ -170,7 +219,7 @@ class _LibraryState extends State<Library> {
                   Navigator.pop(context);
                   PlaylistDetail detail =
                       PlaylistDetail(uid: user.uid, name: _newPlaylistName);
-                  await createPlaylist(detail);
+                  await PlaylistFirestore.create(detail);
                   setState(() {});
                 }
               })
@@ -194,7 +243,7 @@ class _LibraryState extends State<Library> {
           FlatButton(
             child: Text('Delete'),
             onPressed: () {
-              deletePlaylist(detail.id);
+              PlaylistFirestore.remove(detail.id);
               Navigator.pop(context);
               setState(() {});
             },
@@ -204,3 +253,53 @@ class _LibraryState extends State<Library> {
     );
   }
 }
+// Container(
+//   child:ListView.builder(
+//     itemCount: listOfPlaylist.length,
+//     shrinkWrap: true,
+//     itemBuilder: (BuildContext context,int index){
+//       return Card(
+//         color: Colors.grey[900],
+//         borderOnForeground: false,
+//         child: InkWell(
+//           onTap: () {
+//             Navigator.push(
+//                 context,
+//                 MaterialPageRoute(
+//                     builder: (context) => PlaylistWidget(
+//                         playlistDetail: listOfPlaylist[index])));
+//           },
+//           child: Row(
+//             children: [
+//               Container(
+//                 child: Image.asset('assets/img1.jpg',height: 70,width: 70,
+//                   fit: BoxFit.cover,),
+//               ),
+//               SizedBox(width: 25,),
+//               Container(
+//                 width: 230,
+//                 child: Text(listOfPlaylist[index].name,
+//                   style: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.white,
+//                       fontSize: 20,
+//                       letterSpacing: 0.6
+//                   ),
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//               IconButton(
+//                 icon: Icon(
+//                   Icons.delete,
+//                   color: Colors.white,
+//                 ),
+//                 onPressed: () {
+//                   _confirmDeletePlaylist(context, listOfPlaylist[index]);
+//                 },
+//               )
+//             ],
+//           ),
+//         ),
+//       );
+//     }
+//       ))

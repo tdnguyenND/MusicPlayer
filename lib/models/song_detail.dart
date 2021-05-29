@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:music_player/models/serializable.dart';
 
-class SongDetail {
+class SongDetail extends Serializable {
   String id;
 
   final String name;
@@ -15,6 +17,10 @@ class SongDetail {
   String songUrl;
   String imageUrl;
 
+  Timestamp created;
+
+  int listenTime;
+
   Audio _audio;
 
   SongDetail(
@@ -25,16 +31,10 @@ class SongDetail {
       this.song,
       this.image,
       this.songUrl,
-      this.imageUrl});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'artist': artist,
-      'album': album,
-      'songUrl': songUrl,
-      'imageUrl': imageUrl
-    };
+      this.imageUrl,
+      this.created,
+      this.listenTime = 0}) {
+    this.created = this.created ?? Timestamp.now();
   }
 
   Audio toAudio() {
@@ -42,11 +42,12 @@ class SongDetail {
         ? _audio
         : Audio.network(songUrl,
             metas: Metas(
-              image: MetasImage.network(imageUrl),
-              title: name,
-              artist: artist,
-              album: album,
-            ));
+                id: id,
+                image: MetasImage.network(imageUrl),
+                title: name,
+                artist: artist,
+                album: album,
+                extra: {'detail': this}));
     return this._audio;
   }
 
@@ -56,7 +57,9 @@ class SongDetail {
         artist: map['artist'],
         album: map['album'],
         songUrl: map['songUrl'],
-        imageUrl: map['imageUrl']);
+        imageUrl: map['imageUrl'],
+        created: map['created'] ?? Timestamp.now(),
+        listenTime: map['listenTime'] ?? 0);
   }
 
   static fromMap(Map map) {
@@ -66,6 +69,36 @@ class SongDetail {
         artist: map['artist'],
         album: map['album'],
         songUrl: map['songUrl'],
-        imageUrl: map['imageUrl']);
+        imageUrl: map['imageUrl'],
+        created: map['created'] ?? Timestamp.now(),
+        listenTime: map['listenTime'] ?? 0);
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'artist': artist,
+      'album': album,
+      'songUrl': songUrl,
+      'imageUrl': imageUrl,
+      'created': created,
+      'listenTime': listenTime
+    };
+  }
+
+  @override
+  Map<String, dynamic> serializer(){
+    return {
+      'id': id,
+      'name': name,
+      'artist': artist,
+      'album': album,
+      'songUrl': songUrl,
+      'imageUrl': imageUrl,
+      'created': created,
+      'listenTime': listenTime
+    };
   }
 }

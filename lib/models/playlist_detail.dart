@@ -1,28 +1,43 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:music_player/models/serializable.dart';
 import 'package:music_player/models/song_detail.dart';
-import 'package:music_player/services/firestore/fetch_data.dart';
 
-class PlaylistDetail {
+
+class PlaylistDetail extends Serializable {
   String id;
   String uid;
   String name;
-  List<SongDetail> songDetails;
+  List<SongDetail> listSongs;
 
-  PlaylistDetail({this.id, this.uid, this.name});
+  PlaylistDetail({this.id, this.uid, this.name, this.listSongs});
 
-  Future<List<Audio>> get playlist async {
-    return songDetails.map((detail) => detail.toAudio()).toList();
+  static PlaylistDetail fromMapWithouId(Map<String, dynamic> map) {
+    return PlaylistDetail(
+        uid: map['uid'], name: map['name'], listSongs: map['listSongs']);
   }
 
-  void addSong(SongDetail songDetail) {
-    songDetail = songDetail ?? [];
-    this.songDetails.add(songDetail);
+  void fromMapWithoutID(Map<String, dynamic> map){
+    this.uid = map['uid'];
+    this.name = map['name'];
+    this.listSongs = map['listSongs'];
   }
 
-  Future<void> fetchSongs() async {
-    if (id != null) {
-      songDetails = await getSongOfPlaylist(id);
-    } else
-      songDetails = await getAllSong();
+  @override
+  Map<String, dynamic> serializer() {
+    return {
+      'id': id,
+      'uid': uid,
+      'name': name,
+      'listSongs': listSongs == null ? [] : listSongs.map((item) => item.id).toList(),
+    };
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'uid': uid,
+      'name': name,
+      'listSongs': listSongs,
+    };
   }
 }
